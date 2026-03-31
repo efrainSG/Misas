@@ -14,6 +14,7 @@ Route::get('/locaciones/{id}', [LocacionController::class, 'getById']);
 Route::get('/locaciones/nombre/{nombre}', [LocacionController::class, 'getByNombre']);
 Route::get('/locaciones/colonia/{coloniaId}', [LocacionController::class, 'getByColoniaId']);
 Route::get('/locaciones/tipo/{tipoLocacionId}', [LocacionController::class, 'getByTipoLocacionId']);
+Route::get('/locaciones/{id}/horarios', [LocacionController::class, 'getHorariosByLocacionId']);
 
 Route::get('/ciudades', [CiudadController::class, 'getAll']);
 Route::get('/ciudades/{id}', [CiudadController::class, 'getById']);
