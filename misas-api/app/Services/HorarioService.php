@@ -74,7 +74,7 @@ class HorarioService {
             'Notas' => $data['Notas'] ?? null
         ]);
 
-        return response()->json(['message' => 'Horario creado', 'Id' => $id], 201);
+        return $this->getById($id);
     }
 
     public function updateHorario(int $id, array $data)

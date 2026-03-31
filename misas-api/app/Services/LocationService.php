@@ -7,7 +7,7 @@ class LocationService {
     public function getAll()
     {
         $locaciones = DB::table('Locaciones')
-            ->select('Id', 'Nombre', 'Direccion')
+            ->select('Id', 'Nombre', 'Direccion', 'ColoniaId', 'Telefono', 'TipoLocacionId')
             ->get();
 
         return $locaciones;
@@ -16,7 +16,7 @@ class LocationService {
     public function getById(int $id)
     {
         $locacion = DB::table('Locaciones')
-            ->select('Id', 'Nombre', 'Direccion')
+            ->select('Id', 'Nombre', 'Direccion', 'ColoniaId', 'Telefono', 'TipoLocacionId')
             ->where('Id', $id)
             ->first();
 
@@ -26,7 +26,7 @@ class LocationService {
     public function getByTipoLocacionId(int $tipoLocacionId)
     {
         $locaciones = DB::table('Locaciones')
-            ->select('Id', 'Nombre', 'Direccion')
+            ->select('Id', 'Nombre', 'Direccion', 'ColoniaId', 'Telefono', 'TipoLocacionId')
             ->where('TipoLocacionId', $tipoLocacionId)
             ->get();
 
@@ -36,7 +36,7 @@ class LocationService {
     public function getByColoniaId(int $coloniaId)
     {
         $locaciones = DB::table('Locaciones')
-            ->select('Id', 'Nombre', 'Direccion')
+            ->select('Id', 'Nombre', 'Direccion', 'ColoniaId', 'Telefono', 'TipoLocacionId')
             ->where('ColoniaId', $coloniaId)
             ->get();
 
@@ -46,7 +46,7 @@ class LocationService {
     public function getByNombre(string $nombre)
     {
         $locaciones = DB::table('Locaciones')
-            ->select('Id', 'Nombre', 'Direccion')
+            ->select('Id', 'Nombre', 'Direccion', 'ColoniaId', 'Telefono', 'TipoLocacionId')
             ->where('Nombre', 'like', '%' . $nombre . '%')
             ->get();
 

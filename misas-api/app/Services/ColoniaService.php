@@ -58,7 +58,7 @@ class ColoniaService
             'CiudadId' => $validatedData['CiudadId'],
         ]);
 
-        return response()->json(['message' => 'Colonia creada', 'Id' => $coloniaId], 201);
+        return $this->getById($coloniaId);
     }
 
     public function updateColonia(int $id, Request $request)
