@@ -37,7 +37,7 @@ docker compose up -d
 
 Entonces, obtuve un mensaje de error por problema de permisos en el contenedor. Mismo que de momento resolví con esto:
 ```bash
-docker exec -it misas-api-laravel.test-1 bash
+docker exec -it mi-api-laravel.test-1 bash
 chmod -R 777 storage
 chmod -R 777 bootstrap/cache
 php artisan config:clear
@@ -58,4 +58,4 @@ Mencionado previamente que requería mi instancia propia de **mysql**. Entonces 
 > Recordando que todo está manejado por contenedores de *Docker*, la mayoría (si no es que todos) de los comandos están escritos para ser ejecutados hacia Docker desde *PowerShell*.
 
 ```PS
-docker exec -it misas-api-laravel.test-1 php artisan make:controller LocacionController
+docker exec -it misas-api-laravel.test-1 php artisan make:controller MiPrimerController
