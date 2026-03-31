@@ -13,7 +13,7 @@ class ColoniaService
             ->select('Id', 'Nombre')
             ->get();
 
-        return response()->json($colonias);
+        return $colonias;
     }
 
     public function getById(int $id)
@@ -23,11 +23,7 @@ class ColoniaService
             ->where('Id', $id)
             ->first();
 
-        if ($colonia) {
-            return response()->json($colonia);
-        } else {
-            return response()->json(['message' => 'Colonia no encontrada'], 404);
-        }
+        return $colonia;
     }
 
     public function getByNombre(string $nombre)
@@ -37,11 +33,7 @@ class ColoniaService
             ->where('Nombre', $nombre)
             ->first();
 
-        if ($colonia) {
-            return response()->json($colonia);
-        } else {
-            return response()->json(['message' => 'Colonia no encontrada'], 404);
-        }
+        return $colonia;
     }
 
     public function getByCiudadId(int $ciudadId)
@@ -51,7 +43,7 @@ class ColoniaService
             ->where('CiudadId', $ciudadId)
             ->get();
 
-        return response()->json($colonias);
+        return $colonias;
     }
 
     public function createColonia(Request $request)

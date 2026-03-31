@@ -10,7 +10,7 @@ class LocationService {
             ->select('Id', 'Nombre', 'Direccion')
             ->get();
 
-        return response()->json($locaciones);
+        return $locaciones;
     }
 
     public function getById(int $id)
@@ -20,11 +20,7 @@ class LocationService {
             ->where('Id', $id)
             ->first();
 
-        if ($locacion) {
-            return response()->json($locacion);
-        } else {
-            return response()->json(['message' => 'Locación no encontrada'], 404);
-        }
+        return $locacion;
     }
 
     public function getByTipoLocacionId(int $tipoLocacionId)
@@ -34,7 +30,7 @@ class LocationService {
             ->where('TipoLocacionId', $tipoLocacionId)
             ->get();
 
-        return response()->json($locaciones);
+        return $locaciones;
     }
 
     public function getByColoniaId(int $coloniaId)
@@ -44,7 +40,7 @@ class LocationService {
             ->where('ColoniaId', $coloniaId)
             ->get();
 
-        return response()->json($locaciones);
+        return $locaciones;
     }
 
     public function getByNombre(string $nombre)
@@ -54,7 +50,25 @@ class LocationService {
             ->where('Nombre', 'like', '%' . $nombre . '%')
             ->get();
 
-        return response()->json($locaciones);
+        return $locaciones;
+    }
+
+        public function getHorariosByLocacionId(int $locacionId)
+    {
+        $horarios = DB::table('Horarios as h')
+            ->join('Locaciones as l', 'l.Id', '=', 'h.LocacionId')
+            ->select('l.Id as LocacionId',
+                     'l.Nombre as LocacionNombre',
+                     'h.DiaSemana',
+                     'h.Hora',
+                     'h.Notas')
+            ->where('h.LocacionId', $locacionId)
+            ->where('h.Activo', true)
+            ->orderBy('h.DiaSemana')
+            ->orderBy('h.Hora')
+            ->get();
+
+        return $horarios;
     }
 
     public function createLocation(array $data)

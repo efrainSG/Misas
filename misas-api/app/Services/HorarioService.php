@@ -11,7 +11,7 @@ class HorarioService {
             ->select('Id', 'DiaSemana', 'Hora', 'Activo', 'Notas')
             ->get();
 
-        return response()->json($horarios);
+        return $horarios;
     }
 
     public function getById(int $id)
@@ -21,11 +21,7 @@ class HorarioService {
             ->where('Id', $id)
             ->first();
 
-        if ($horario) {
-            return response()->json($horario);
-        } else {
-            return response()->json(['message' => 'Horario no encontrado'], 404);
-        }
+        return $horario;
     }
 
     public function getByDiaSemana(string $diaSemana)
@@ -35,7 +31,7 @@ class HorarioService {
             ->where('DiaSemana', $diaSemana)
             ->get();
 
-        return response()->json($horarios);
+        return $horarios;
     }
 
     public function getByActivo(bool $activo)
@@ -45,7 +41,7 @@ class HorarioService {
             ->where('Activo', $activo)
             ->get();
 
-        return response()->json($horarios);
+        return $horarios;
     }
 
     public function getByHora(string $hora)
@@ -55,7 +51,7 @@ class HorarioService {
             ->where('Hora', $hora)
             ->get();
 
-        return response()->json($horarios);
+        return $horarios;
     }
 
     public function getByLocacionId(int $locacionId)
@@ -65,7 +61,7 @@ class HorarioService {
             ->where('LocacionId', $locacionId)
             ->get();
 
-        return response()->json($horarios);
+        return $horarios;
     }
 
     public function createHorario(array $data)

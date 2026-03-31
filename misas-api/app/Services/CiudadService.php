@@ -11,7 +11,7 @@ class CiudadService {
             ->select('Id', 'Nombre')
             ->get();
 
-        return response()->json($ciudades);
+        return $ciudades;
     }
 
     public function getById(int $id)
@@ -21,11 +21,7 @@ class CiudadService {
             ->where('Id', $id)
             ->first();
 
-        if ($ciudad) {
-            return response()->json($ciudad);
-        } else {
-            return response()->json(['message' => 'Ciudad no encontrada'], 404);
-        }
+        return $ciudad;
     }
 
     public function getByNombre(string $nombre)
@@ -35,11 +31,7 @@ class CiudadService {
             ->where('Nombre', $nombre)
             ->first();
 
-        if ($ciudad) {
-            return response()->json($ciudad);
-        } else {
-            return response()->json(['message' => 'Ciudad no encontrada'], 404);
-        }
+        return $ciudad;
     }
 
     public function createCiudad(Request $request)
