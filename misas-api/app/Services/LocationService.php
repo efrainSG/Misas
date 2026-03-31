@@ -4,7 +4,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\DB;
 
 class LocationService {
-        public function getAll()
+    public function getAll()
     {
         $locaciones = DB::table('Locaciones')
             ->select('Id', 'Nombre', 'Direccion')
@@ -53,7 +53,7 @@ class LocationService {
         return $locaciones;
     }
 
-        public function getHorariosByLocacionId(int $locacionId)
+    public function getHorariosByLocacionId(int $locacionId)
     {
         $horarios = DB::table('Horarios as h')
             ->join('Locaciones as l', 'l.Id', '=', 'h.LocacionId')
@@ -74,14 +74,14 @@ class LocationService {
     public function createLocation(array $data)
     {
         $id = DB::table('Locaciones')->insertGetId([
-            'Nombre' => $data['Nombre'],
-            'Direccion' => $data['Direccion'],
-            'ColoniaId' => $data['ColoniaId'],
-            'Telefono' => $data['Telefono'] ?? null,
-            'TipoLocacionId' => $data['TipoLocacionId']
+            'Nombre' => $data['nombre'],
+            'Direccion' => $data['direccion'],
+            'ColoniaId' => $data['coloniaId'],
+            'Telefono' => $data['telefono'] ?? null,
+            'TipoLocacionId' => $data['tipoLocacionId']
         ]);
 
-        return response()->json(['message' => 'Locación creada', 'id' => $id], 201);
+        return $this->getById($id);
     }
 
     public function updateLocation(int $id, array $data)

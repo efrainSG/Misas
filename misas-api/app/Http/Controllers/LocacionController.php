@@ -22,7 +22,7 @@ class LocacionController extends Controller
     public function getById(int $id)
     {
         $data = $this->locationService->getById($id);
-        if ($data->isEmpty()) {
+        if (!$data) {
             return response()->json(['message' => 'No se encontraron locaciones con ese ID'], 404);
         }
         return $data;
@@ -51,7 +51,7 @@ class LocacionController extends Controller
         if ($locacion->isEmpty()) {
             return response()->json(['message' => 'No se encontró la locación con ese ID'], 404);
         }
-        
+
         $data = $this->locationService->getHorariosByLocacionId($locacionId);
 
         if ($data->isEmpty()) {
@@ -68,5 +68,22 @@ class LocacionController extends Controller
                 ];
             })
         ]);
+    }
+
+    public function create(Request $request)
+    {
+        // Validar los datos de entrada
+        $validatedData = $request->validate([
+            'nombre' => 'required|string|max:100',
+            'direccion' => 'required|string|max:500',
+            'tipoLocacionId' => 'required|integer',
+            'coloniaId' => 'required|integer',
+            'telefono' => 'nullable|string|max:20'
+        ]);
+
+        // Crear la nueva locación
+        $newLocacion = $this->locationService->createLocation($validatedData);
+
+        return response()->json($newLocacion, 201);
     }
 }
