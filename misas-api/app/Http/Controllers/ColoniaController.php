@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\ColoniaService;
 
 class ColoniaController extends Controller
 {
@@ -20,7 +21,11 @@ class ColoniaController extends Controller
 
     public function getById(int $id)
     {
-        return $this->coloniaService->getById($id);
+        $data = $this->coloniaService->getById($id);
+        if ($data->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron colonias con ese ID'], 404);
+        }
+        return $data;
     }
 
     public function getByNombre(string $nombre)

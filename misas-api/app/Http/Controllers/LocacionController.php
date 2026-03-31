@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\LocationService;
 
 class LocacionController extends Controller
 {
@@ -20,7 +21,11 @@ class LocacionController extends Controller
 
     public function getById(int $id)
     {
-        return $this->locationService->getById($id);
+        $data = $this->locationService->getById($id);
+        if ($data->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron locaciones con ese ID'], 404);
+        }
+        return $data;
     }
 
     public function getByTipoLocacionId(int $tipoLocacionId)
@@ -30,11 +35,38 @@ class LocacionController extends Controller
 
     public function getByColoniaId(int $coloniaId)
     {
-        return $this->locationService->getByColoniaId($coloniaId);
+        $data = $this->locationService->getByColoniaId($coloniaId);
+        return $data;
     }
 
     public function getByNombre(string $nombre)
     {
-        return $this->locationService->getByNombre($nombre);
+        $data = $this->locationService->getByNombre($nombre);
+        return $data;
+    }
+
+    public function getHorariosByLocacionId(int $locacionId)
+    {
+        $locacion = $this->locationService->getById($locacionId);
+        if ($locacion->isEmpty()) {
+            return response()->json(['message' => 'No se encontró la locación con ese ID'], 404);
+        }
+        
+        $data = $this->locationService->getHorariosByLocacionId($locacionId);
+
+        if ($data->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron horarios para esta locación'], 404);
+        }
+
+        return response()->json([
+            'locacion' => $data[0]->LocacionNombre,
+            'horarios' => $data->map(function ($item) {
+                return [
+                    'diaSemana' => $item->DiaSemana,
+                    'hora' => $item->Hora,
+                    'notas' => $item->Notas
+                ];
+            })
+        ]);
     }
 }

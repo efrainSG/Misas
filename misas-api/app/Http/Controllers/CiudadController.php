@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\CiudadService;
 
 class CiudadController extends Controller
 {
@@ -20,7 +21,11 @@ class CiudadController extends Controller
 
     public function getById(int $id)
     {
-        return $this->ciudadService->getById($id);
+        $data = $this->ciudadService->getById($id);
+        if ($data->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron ciudades con ese ID'], 404);
+        }
+        return $data;
     }
 
     public function getByNombre(string $nombre)

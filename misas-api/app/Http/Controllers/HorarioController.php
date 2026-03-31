@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\HorarioService;
 
 class HorarioController extends Controller
 {
@@ -20,7 +21,11 @@ class HorarioController extends Controller
 
     public function getById(int $id)
     {
-        return $this->horarioService->getById($id);
+        $data = $this->horarioService->getById($id);
+        if ($data->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron horarios con ese ID'], 404);
+        }
+        return $data;
     }
 
     public function getByDiaSemana(string $diaSemana)
