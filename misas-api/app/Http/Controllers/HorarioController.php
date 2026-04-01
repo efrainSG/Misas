@@ -22,7 +22,7 @@ class HorarioController extends Controller
     public function getById(int $id)
     {
         $data = $this->horarioService->getById($id);
-        if ($data->isEmpty()) {
+        if (!$data) {
             return response()->json(['message' => 'No se encontraron horarios con ese ID'], 404);
         }
         return $data;
@@ -46,5 +46,22 @@ class HorarioController extends Controller
     public function getByLocacionId(int $locacionId)
     {
         return $this->horarioService->getByLocacionId($locacionId);
+    }
+
+    public function create(Request $request)
+    {
+        // Validar los datos de entrada
+        $validatedData = $request->validate([
+            'diaSemana' => 'required|integer',
+            'locacionId' => 'required|integer',
+            'hora' => 'required|string|max:10',
+            'activo' => 'required|boolean',
+            'notas' => 'nullable|string|max:500'
+        ]);
+
+        // Crear el nuevo horario
+            $newHorario = $this->horarioService->createHorario($validatedData);
+
+        return response()->json($newHorario, 201);
     }
 }
