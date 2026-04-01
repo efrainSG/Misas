@@ -10,7 +10,7 @@ class ColoniaService
     public function getAll()
     {
         $colonias = DB::table('Colonias')
-            ->select('Id', 'Nombre')
+            ->select('Id', 'Nombre', 'CiudadId')
             ->get();
 
         return $colonias;
@@ -19,7 +19,7 @@ class ColoniaService
     public function getById(int $id)
     {
         $colonia = DB::table('Colonias')
-            ->select('Id', 'Nombre')
+            ->select('Id', 'Nombre', 'CiudadId')
             ->where('Id', $id)
             ->first();
 
@@ -29,8 +29,8 @@ class ColoniaService
     public function getByNombre(string $nombre)
     {
         $colonia = DB::table('Colonias')
-            ->select('Id', 'Nombre')
-            ->where('Nombre', $nombre)
+            ->select('Id', 'Nombre', 'CiudadId')
+            ->where('Nombre', 'like', '%' . $nombre . '%')
             ->first();
 
         return $colonia;
@@ -39,41 +39,31 @@ class ColoniaService
     public function getByCiudadId(int $ciudadId)
     {
         $colonias = DB::table('Colonias')
-            ->select('Id', 'Nombre')
+            ->select('Id', 'Nombre', 'CiudadId')
             ->where('CiudadId', $ciudadId)
             ->get();
 
         return $colonias;
     }
 
-    public function createColonia(Request $request)
+    public function createColonia(array $data)
     {
-        $validatedData = $request->validate([
-            'Nombre' => 'required|string|max:255',
-            'CiudadId' => 'required|integer',
-        ]);
-
-        $coloniaId = DB::table('Colonias')->insertGetId([
-            'Nombre' => $validatedData['Nombre'],
-            'CiudadId' => $validatedData['CiudadId'],
+            $coloniaId = DB::table('Colonias')->insertGetId([
+            'Nombre' => $data['nombre'],
+            'CiudadId' => $data['ciudadId'],
         ]);
 
         return $this->getById($coloniaId);
     }
 
-    public function updateColonia(int $id, Request $request)
+    public function updateColonia(int $id, array $data)
     {
-        $validatedData = $request->validate([
-            'Nombre' => 'sometimes|required|string|max:255',
-            'CiudadId' => 'sometimes|required|integer',
-        ]);
-
         $updateData = [];
-        if (isset($validatedData['Nombre'])) {
-            $updateData['Nombre'] = $validatedData['Nombre'];
+        if (isset($data['nombre'])) {
+            $updateData['Nombre'] = $data['nombre'];
         }
-        if (isset($validatedData['CiudadId'])) {
-            $updateData['CiudadId'] = $validatedData['CiudadId'];
+        if (isset($data['ciudadId'])) {
+            $updateData['CiudadId'] = $data['ciudadId'];
         }
 
         if (empty($updateData)) {
