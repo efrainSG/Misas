@@ -1,7 +1,19 @@
 <h3>Nueva locación</h3>
 
-    <input [(ngModel)]="model.Nombre" placeholder="Nombre">
-    <input [(ngModel)]="model.Direccion" placeholder="Dirección">
-    <input [(ngModel)]="model.Telefono" placeholder="Teléfono">
+<form [formGroup]="form">
+  <input formControlName="Nombre" placeholder="Nombre">
+  <input formControlName="Direccion" placeholder="Dirección">
+  <input formControlName="Telefono" placeholder="Teléfono">
 
-    <button (click)="crear()">Guardar</button>
+  <select formControlName="CiudadId">
+  <option [ngValue]="null">Selecciona una ciudad</option>
+  <option *ngFor="let ciudad of ciudades" [ngValue]="ciudad.Id">{{ ciudad.Nombre }}</option>
+  </select>
+
+  <select formControlName="ColoniaId" [disabled]="!form.get('CiudadId')?.value || colonias.length === 0">
+  <option [ngValue]="null">Selecciona una colonia de {{ form.get('CiudadId')?.value ? ciudades.find(c => c.Id === form.get('CiudadId')?.value)?.Nombre : 'una ciudad' }}</option>
+  <option *ngFor="let colonia of colonias" [ngValue]="colonia.Id">{{ colonia.Nombre }}</option>
+  </select>
+
+  <button type="button" (click)="crear()">Guardar</button>
+</form>

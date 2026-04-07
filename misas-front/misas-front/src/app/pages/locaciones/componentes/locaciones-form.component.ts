@@ -1,45 +1,83 @@
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, Output } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { ReactiveFormsModule, FormBuilder, FormGroup } from "@angular/forms";
+
 import { LocationService } from "../../../services/locationService";
+import { CiudadService } from "../../../services/ciudad-service";
+import { ColoniaService } from "../../../services/colonia-service";
 
 @Component({
     selector: 'app-locaciones-form-component',
     templateUrl: './locaciones-form.component.html',
     styleUrl: './locaciones-form.component.css',
     standalone: true,
-    imports: [CommonModule, FormsModule]
+    imports: [CommonModule, ReactiveFormsModule]
 })
 
-export class LocacionesFormComponent {
+export class LocacionesFormComponent implements OnInit {
     @Output() onCreated = new EventEmitter<void>();
 
-    model = {
-        Nombre: '',
-        Direccion: '',
-        Telefono: '',
-        ColoniaId: 1,
-        TipoLocacionId: 1
-    };
+    ciudades: any[] = [];
+    colonias: any[] = [];
 
-    constructor(private service: LocationService) {}
+    form!: FormGroup;
+
+    constructor(
+        private service: LocationService,
+        private ciudadService: CiudadService,
+        private coloniaService: ColoniaService,
+        private formBuilder: FormBuilder,
+        private cdr: ChangeDetectorRef
+    ) {}
+
+    ngOnInit() {
+        this.form = this.formBuilder.group({
+            Nombre: [''],
+            Direccion: [''],
+            Telefono: [''],
+            ColoniaId: [null],
+            TipoLocacionId: [1],
+            CiudadId: [null]
+        });
+
+        this.cargarCatalogos(); 
+
+        this.form.get('CiudadId')?.valueChanges.subscribe(ciudadId => {
+        if (ciudadId) {
+            this.coloniaService.getByCiudad(ciudadId).subscribe({
+                next: (colonias) => {
+                    this.colonias = colonias;
+                    this.form.patchValue({ ColoniaId: null }); // Reset colonia selection when ciudad changes
+                    this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
+                }
+            });
+        }
+        });
+    }
+
+    cargarCatalogos() {
+        this.ciudadService.getAll().subscribe({
+            next: (ciudades) => {
+                this.ciudades = ciudades;
+                this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
+            }
+        });
+    }
 
     crear() {
-        this.service.create(this.model).subscribe({
+        if (this.form.invalid) return;
+
+        this.service.create(this.form.value).subscribe({
             next: () => {
                 this.onCreated.emit();
-                this.model = {
-                    Nombre: '',
-                    Direccion: '',
-                    Telefono: '',
-                    ColoniaId: 1,
+                this.form.reset({
                     TipoLocacionId: 1
-                };
+                });
+                this.colonias = []; // Clear colonias when a new location is created
             },
             error: (err) => {
                 console.error('Error al crear locación', err);
             }
         });
     }
-
 }

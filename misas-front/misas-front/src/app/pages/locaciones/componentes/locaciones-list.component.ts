@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Input, OnChanges } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from "@angular/core";
 import { LocationService } from "../../../services/locationService";
 
 @Component({
@@ -10,13 +10,16 @@ import { LocationService } from "../../../services/locationService";
     imports: [CommonModule]
 })
 
-export class LocacionesListComponent implements OnChanges {
-    locaciones: any[] = [];
+export class LocacionesListComponent implements OnChanges, OnInit {
+    locaciones: any;
     @Input() refreshFlag: boolean = false;
     
-    constructor(private servicio: LocationService) {}
+    constructor(
+        private servicio: LocationService,
+        private cdr: ChangeDetectorRef
+    ) {}
 
-    ngoninit(): void {
+    ngOnInit(): void {
         this.cargar();
     }
     
@@ -28,6 +31,7 @@ export class LocacionesListComponent implements OnChanges {
         this.servicio.getAll().subscribe({
             next: (data) => {
                 this.locaciones = data;
+                this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             },
             error: (err) => {
                 console.error('Error al cargar locaciones', err);
