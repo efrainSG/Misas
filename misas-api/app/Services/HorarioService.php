@@ -8,7 +8,7 @@ class HorarioService {
         public function getAll()
     {
         $horarios = DB::table('Horarios')
-            ->select('Id', 'DiaSemana', 'Hora', 'Activo', 'Notas')
+            ->select('Id', 'LocacionId', 'DiaSemana', 'Hora', 'Activo', 'Notas')
             ->get();
 
         return $horarios;
@@ -17,7 +17,7 @@ class HorarioService {
     public function getById(int $id)
     {
         $horario = DB::table('Horarios')
-            ->select('Id', 'DiaSemana', 'Hora', 'Activo', 'Notas')
+            ->select('Id', 'LocacionId', 'DiaSemana', 'Hora', 'Activo', 'Notas')
             ->where('Id', $id)
             ->first();
 
@@ -27,7 +27,7 @@ class HorarioService {
     public function getByDiaSemana(string $diaSemana)
     {
         $horarios = DB::table('Horarios')
-            ->select('Id', 'DiaSemana', 'Hora', 'Activo', 'Notas')
+            ->select('Id', 'LocacionId', 'DiaSemana', 'Hora', 'Activo', 'Notas')
             ->where('DiaSemana', $diaSemana)
             ->get();
 
@@ -37,7 +37,7 @@ class HorarioService {
     public function getByActivo(bool $activo)
     {
         $horarios = DB::table('Horarios')
-            ->select('Id', 'DiaSemana', 'Hora', 'Activo', 'Notas')
+            ->select('Id', 'LocacionId', 'DiaSemana', 'Hora', 'Activo', 'Notas')
             ->where('Activo', $activo)
             ->get();
 
@@ -47,7 +47,7 @@ class HorarioService {
     public function getByHora(string $hora)
     {
         $horarios = DB::table('Horarios')
-            ->select('Id', 'DiaSemana', 'Hora', 'Activo', 'Notas')
+            ->select('Id', 'LocacionId', 'DiaSemana', 'Hora', 'Activo', 'Notas')
             ->where('Hora', $hora)
             ->get();
 
@@ -57,7 +57,7 @@ class HorarioService {
     public function getByLocacionId(int $locacionId)
     {
         $horarios = DB::table('Horarios')
-            ->select('Id', 'DiaSemana', 'Hora', 'Activo', 'Notas')
+            ->select('Id', 'LocacionId', 'DiaSemana', 'Hora', 'Activo', 'Notas')
             ->where('LocacionId', $locacionId)
             ->get();
 
@@ -67,14 +67,14 @@ class HorarioService {
     public function createHorario(array $data)
     {
         $id = DB::table('Horarios')->insertGetId([
-            'LocacionId' => $data['LocacionId'],
-            'DiaSemana' => $data['DiaSemana'],
-            'Hora' => $data['Hora'],
-            'Activo' => $data['Activo'],
-            'Notas' => $data['Notas'] ?? null
+            'LocacionId' => $data['locacionId'],
+            'DiaSemana' => $data['diaSemana'],
+            'Hora' => $data['hora'],
+            'Activo' => $data['activo'],
+            'Notas' => $data['notas'] ?? null
         ]);
 
-        return response()->json(['message' => 'Horario creado', 'Id' => $id], 201);
+        return $this->getById($id);
     }
 
     public function updateHorario(int $id, array $data)
@@ -82,11 +82,11 @@ class HorarioService {
         $updated = DB::table('Horarios')
             ->where('Id', $id)
             ->update([
-                'LocacionId' => $data['LocacionId'],
-                'DiaSemana' => $data['DiaSemana'],
-                'Hora' => $data['Hora'],
-                'Activo' => $data['Activo'],
-                'Notas' => $data['Notas'] ?? null
+                'LocacionId' => $data['locacionId'],
+                'DiaSemana' => $data['diaSemana'],
+                'Hora' => $data['hora'],
+                'Activo' => $data['activo'],
+                'Notas' => $data['notas'] ?? null
             ]);
 
         if ($updated) {

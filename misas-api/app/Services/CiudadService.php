@@ -28,37 +28,29 @@ class CiudadService {
     {
         $ciudad = DB::table('Ciudades')
             ->select('Id', 'Nombre')
-            ->where('Nombre', $nombre)
-            ->first();
+            ->where('Nombre', 'like', '%' . $nombre . '%')
+            ->get();
 
         return $ciudad;
     }
 
-    public function createCiudad(Request $request)
+    public function createCiudad(array $data)
     {
-        $validatedData = $request->validate([
-            'Nombre' => 'required|string|max:255',
-        ]);
-
         $ciudadId = DB::table('Ciudades')->insertGetId([
-            'Nombre' => $validatedData['Nombre'],
+            'Nombre' => $data['nombre'],
         ]);
 
-        return response()->json(['message' => 'Ciudad creada exitosamente', 'Id' => $ciudadId], 201);
+        return $this->getById($ciudadId);
     }
 
-    public function updateCiudad(int $id, Request $request)
+    public function updateCiudad(int $id, array $data)
     {
-        $validatedData = $request->validate([
-            'Nombre' => 'required|string|max:255',
-        ]);
-
         $updated = DB::table('Ciudades')
             ->where('Id', $id)
-            ->update(['Nombre' => $validatedData['Nombre']]);
+            ->update(['Nombre' => $data['nombre']]);
 
         if ($updated) {
-            return response()->json(['message' => 'Ciudad actualizada exitosamente']);
+            return $this->getById($id);
         } else {
             return response()->json(['message' => 'Ciudad no encontrada'], 404);
         }

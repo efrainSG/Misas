@@ -22,7 +22,7 @@ class ColoniaController extends Controller
     public function getById(int $id)
     {
         $data = $this->coloniaService->getById($id);
-        if ($data->isEmpty()) {
+        if (!$data) {
             return response()->json(['message' => 'No se encontraron colonias con ese ID'], 404);
         }
         return $data;
@@ -38,4 +38,17 @@ class ColoniaController extends Controller
         return $this->coloniaService->getByCiudadId($ciudadId);
     }
 
+    public function create(Request $request)
+    {
+        // Validar los datos de entrada
+        $validatedData = $request->validate([
+            'nombre' => 'required|string|max:100',
+            'ciudadId' => 'required|integer'
+        ]);
+
+        // Crear la nueva colonia
+        $newColonia = $this->coloniaService->createColonia($validatedData);
+
+        return response()->json($newColonia, 201);
+    }
 }

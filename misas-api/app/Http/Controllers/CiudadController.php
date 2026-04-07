@@ -22,7 +22,7 @@ class CiudadController extends Controller
     public function getById(int $id)
     {
         $data = $this->ciudadService->getById($id);
-        if ($data->isEmpty()) {
+        if (!$data) {
             return response()->json(['message' => 'No se encontraron ciudades con ese ID'], 404);
         }
         return $data;
@@ -31,5 +31,18 @@ class CiudadController extends Controller
     public function getByNombre(string $nombre)
     {
         return $this->ciudadService->getByNombre($nombre);
+    }
+
+    public function create(Request $request)
+    {
+        // Validar los datos de entrada
+        $validatedData = $request->validate([
+            'nombre' => 'required|string|max:100'
+        ]);
+
+        // Crear la nueva ciudad
+        $newCiudad = $this->ciudadService->createCiudad($validatedData);
+
+        return response()->json($newCiudad, 201);
     }
 }

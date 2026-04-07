@@ -48,7 +48,7 @@ class LocacionController extends Controller
     public function getHorariosByLocacionId(int $locacionId)
     {
         $locacion = $this->locationService->getById($locacionId);
-        if ($locacion->isEmpty()) {
+        if (!$locacion) {
             return response()->json(['message' => 'No se encontró la locación con ese ID'], 404);
         }
 
