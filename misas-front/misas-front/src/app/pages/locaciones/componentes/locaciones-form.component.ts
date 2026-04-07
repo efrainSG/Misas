@@ -19,6 +19,7 @@ export class LocacionesFormComponent implements OnInit {
 
     ciudades: any[] = [];
     colonias: any[] = [];
+    coloniaHighlight = false;
 
     form!: FormGroup;
 
@@ -49,6 +50,10 @@ export class LocacionesFormComponent implements OnInit {
                     this.colonias = colonias;
                     this.form.patchValue({ ColoniaId: null }); // Reset colonia selection when ciudad changes
                     this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
+                    this.coloniaHighlight = true;
+                    setTimeout(() => {
+                        this.coloniaHighlight = false;
+                    }, 800);
                 }
             });
         }

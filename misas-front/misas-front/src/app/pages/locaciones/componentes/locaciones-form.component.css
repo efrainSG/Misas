@@ -1,0 +1,15 @@
+.highlight {
+  animation: glow 1.0s ease-in-out;
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 0px rgba(13,110,253,0);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(13,110,253,0.8);
+  }
+  100% {
+    box-shadow: 0 0 0px rgba(13,110,253,0);
+  }
+}
