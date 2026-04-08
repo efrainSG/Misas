@@ -1,0 +1,22 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-body">
+
+      <h4 class="card-title mb-3">Ciudades</h4>
+
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+            <tr>
+                <th>Nombre</th>
+            </tr>
+            </thead>
+    
+            <tbody>
+            <tr *ngFor="let ciudad of ciudades">
+                <td class="fw-semibold">{{ ciudad.Nombre }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+  </div>
+</div>
