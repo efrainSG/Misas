@@ -1,0 +1,23 @@
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-body">
+            <h3 class="card-title mb-3">Nueva colonia</h3>
+            <form [formGroup]="form">
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input formControlName="Nombre" class="form-control" placeholder="Nombre">
+                </div>
+
+                <div class="mb-3">
+                <label for="ciudad" class="form-label">Ciudad</label>
+                <select class="form-select" formControlName="CiudadId">
+                    <option [ngValue]="null">Selecciona una ciudad</option>
+                    <option *ngFor="let ciudad of ciudades" [ngValue]="ciudad.Id">{{ ciudad.Nombre }}</option>
+                </select>
+                </div>
+
+                <button class="btn btn-primary w-100" type="button" (click)="crear()">Guardar</button>
+            </form>
+        </div>
+    </div>
+</div>
