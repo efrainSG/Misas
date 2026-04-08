@@ -1,0 +1,51 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-body">
+      <h3 class="card-title mb-3">Nueva locación</h3>
+
+      <form [formGroup]="form">
+        <div class="mb-3">
+          <label for="nombre" class="form-label">Nombre</label>
+          <input formControlName="Nombre" class="form-control" placeholder="Nombre">
+        </div>
+        <div class="mb-3">
+          <label for="direccion" class="form-label">Dirección</label>
+          <input formControlName="Direccion" class="form-control" placeholder="Dirección">
+        </div>
+        <div class="mb-3">
+          <label for="telefono" class="form-label">Teléfono</label>
+          <input formControlName="Telefono" class="form-control" placeholder="Teléfono">
+        </div>
+
+        <div class="mb-3">
+          <label for="ciudad" class="form-label">Tipo de locación</label>
+          <select class="form-select" formControlName="TipoLocacionId">
+            <option [ngValue]="null">Selecciona un tipo de locación</option>
+            <option *ngFor="let tipo of tiposLocacion" [ngValue]="tipo.Id">{{ tipo.Nombre }}</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="ciudad" class="form-label">Ciudad</label>
+          <select class="form-select" formControlName="CiudadId">
+            <option [ngValue]="null">Selecciona una ciudad</option>
+            <option *ngFor="let ciudad of ciudades" [ngValue]="ciudad.Id">{{ ciudad.Nombre }}</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="colonia" class="form-label">Colonia</label>
+          <select class="form-select"
+          [class.highlight]="coloniaHighlight"
+          formControlName="ColoniaId"
+          [disabled]="!form.get('CiudadId')?.value">
+            <option [ngValue]="null">Selecciona una colonia de {{ form.get('CiudadId')?.value ? ciudades.find(c => c.Id === form.get('CiudadId')?.value)?.Nombre : 'una ciudad' }}</option>
+            <option *ngFor="let colonia of colonias" [ngValue]="colonia.Id">{{ colonia.Nombre }}</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary w-100" type="button" (click)="crear()">Guardar</button>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-body">
+
+      <h4 class="card-title mb-3">Locaciones</h4>
+
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Nombre</th>
+            <th>Dirección</th>
+            <th>Teléfono</th>
+            <th>Colonia</th>
+            <th>Tipo</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let locacion of locaciones">
+            <td class="fw-semibold">{{ locacion.Nombre }}</td>
+            <td>{{ locacion.Direccion }}</td>
+            <td>{{ locacion.Telefono || '—' }}</td>
+            <td>{{ locacion.ColoniaId }}</td>
+            <td>{{ locacion.TipoLocacionId }}</td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+  </div>
+</div>
