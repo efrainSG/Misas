@@ -12,4 +12,8 @@ export class CiudadService {
   getAll() {
     return this.http.get<any[]>(this.apiURL);
   }
+
+  create(ciudad: any) {
+    return this.http.post(this.apiURL, ciudad);
+  }
 }
