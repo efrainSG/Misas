@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup } from "@angular/forms";
 import { LocationService } from "../../../services/locationService";
 import { CiudadService } from "../../../services/ciudad-service";
 import { ColoniaService } from "../../../services/colonia-service";
+import { TipoLocacionService } from "../../../services/tipo-locacion-service";
 
 @Component({
     selector: 'app-locaciones-form-component',
@@ -19,6 +20,7 @@ export class LocacionesFormComponent implements OnInit {
 
     ciudades: any[] = [];
     colonias: any[] = [];
+    tiposLocacion: any[] = [];
     coloniaHighlight = false;
 
     form!: FormGroup;
@@ -27,6 +29,7 @@ export class LocacionesFormComponent implements OnInit {
         private service: LocationService,
         private ciudadService: CiudadService,
         private coloniaService: ColoniaService,
+        private tipoLocacionService: TipoLocacionService,
         private formBuilder: FormBuilder,
         private cdr: ChangeDetectorRef
     ) {}
@@ -37,7 +40,7 @@ export class LocacionesFormComponent implements OnInit {
             Direccion: [''],
             Telefono: [''],
             ColoniaId: [null],
-            TipoLocacionId: [1],
+            TipoLocacionId: [null],
             CiudadId: [null]
         });
 
@@ -67,18 +70,32 @@ export class LocacionesFormComponent implements OnInit {
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             }
         });
+
+        this.tipoLocacionService.getAll().then((tipos) => {
+            this.tiposLocacion = tipos;
+            this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
+        });
     }
 
     crear() {
         if (this.form.invalid) return;
 
-        this.service.create(this.form.value).subscribe({
+        const newFormValue = {
+            coloniaId: this.form.value.ColoniaId, // Asegurar que coloniaId se envíe como null si no se selecciona
+            tipoLocacionId: this.form.value.TipoLocacionId,
+            ciudadId: this.form.value.CiudadId,
+            nombre: this.form.value.Nombre,
+            direccion: this.form.value.Direccion,
+            telefono: this.form.value.Telefono
+        };
+
+        this.service.create(newFormValue).subscribe({
             next: () => {
                 this.onCreated.emit();
                 this.form.reset({
-                    TipoLocacionId: 1
+                    TipoLocacionId: null
                 });
-                this.colonias = []; // Clear colonias when a new location is created
+                this.ciudades = []; // Clear ciudades when a new location is created
             },
             error: (err) => {
                 console.error('Error al crear locación', err);

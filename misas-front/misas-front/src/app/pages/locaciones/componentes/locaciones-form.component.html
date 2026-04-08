@@ -18,6 +18,14 @@
         </div>
 
         <div class="mb-3">
+          <label for="ciudad" class="form-label">Tipo de locación</label>
+          <select class="form-select" formControlName="TipoLocacionId">
+            <option [ngValue]="null">Selecciona un tipo de locación</option>
+            <option *ngFor="let tipo of tiposLocacion" [ngValue]="tipo.Id">{{ tipo.Nombre }}</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
           <label for="ciudad" class="form-label">Ciudad</label>
           <select class="form-select" formControlName="CiudadId">
             <option [ngValue]="null">Selecciona una ciudad</option>
