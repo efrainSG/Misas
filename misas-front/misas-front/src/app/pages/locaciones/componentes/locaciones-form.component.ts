@@ -71,9 +71,11 @@ export class LocacionesFormComponent implements OnInit {
             }
         });
 
-        this.tipoLocacionService.getAll().then((tipos) => {
-            this.tiposLocacion = tipos;
-            this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
+        this.tipoLocacionService.getAll().subscribe({
+            next: (tipos) => {
+                this.tiposLocacion = tipos;
+                this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
+            }
         });
     }
 

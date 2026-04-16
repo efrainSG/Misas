@@ -1,0 +1,20 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-body">
+      <h3 class="card-title mb-3">Nuevo tipo de locación</h3>
+
+      <form [formGroup]="form">
+        <div class="mb-3">
+          <label for="nombre" class="form-label">Nombre</label>
+          <input formControlName="Nombre" class="form-control" placeholder="Nombre">
+        </div>
+        <div class="mb-3">
+          <label for="descripcion" class="form-label">Descripción</label>
+          <input formControlName="Descripcion" class="form-control" placeholder="Descripción">
+        </div>
+
+        <button class="btn btn-primary w-100" type="button" (click)="crear()">Guardar</button>
+      </form>
+    </div>
+  </div>
+</div>

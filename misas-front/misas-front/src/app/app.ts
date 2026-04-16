@@ -9,7 +9,8 @@ import { CiudadesPage } from './pages/ciudades/ciudades.page';
   imports: [RouterOutlet,
     Locacionespage,
     ColoniasPage,
-    CiudadesPage
+    CiudadesPage,
+    
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'

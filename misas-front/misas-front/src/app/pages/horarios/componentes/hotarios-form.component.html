@@ -1,0 +1,56 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-body">
+      <h3 class="card-title mb-3">Nuevo horario</h3>
+
+      <form [formGroup]="form">
+        <div class="mb-3">
+          <label for="diaSemana" class="form-label">Día de la semana</label>
+          <select class="form-select" formControlName="DiaSemana">
+            <option [ngValue]="null">Selecciona un día de la semana</option>
+            <option *ngFor="let dia of diasSemana" [ngValue]="dia.Id">{{ dia.Nombre }}</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="tipoLocacion" class="form-label">Tipo de locación</label>
+          <select class="form-select" formControlName="tipoLocacionId">
+            <option [ngValue]="null">Selecciona un tipo de locación</option>
+            <option *ngFor="let tipo of tiposLocacion" [ngValue]="tipo.Id">{{ tipo.Nombre }}</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="ciudad" class="form-label">Ciudad</label>
+          <select class="form-select" formControlName="ciudadId">
+            <option [ngValue]="null">Selecciona una ciudad</option>
+            <option *ngFor="let ciudad of ciudades" [ngValue]="ciudad.Id">{{ ciudad.Nombre }}</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="colonia" class="form-label">Colonia</label>
+          <select class="form-select" formControlName="coloniaId">
+            <option [ngValue]="null">Selecciona una colonia</option>
+            <option *ngFor="let colonia of colonias" [ngValue]="colonia.Id">{{ colonia.Nombre }}</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="locacion" class="form-label">Locación</label>
+          <select class="form-select" formControlName="locacionId">
+            <option [ngValue]="null">Selecciona una locación</option>
+            <option *ngFor="let locacion of locaciones" [ngValue]="locacion.Id">{{ locacion.Nombre }}</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="hora" class="form-label">Hora</label>
+          <input formControlName="Hora" type="time" class="form-control" placeholder="Hora de celebración">
+        </div>
+
+        <button class="btn btn-primary w-100" type="button" (click)="crear()">Guardar</button>
+      </form>
+    </div>
+  </div>
+</div>
