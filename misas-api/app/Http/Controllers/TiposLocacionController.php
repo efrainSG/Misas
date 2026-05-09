@@ -45,14 +45,23 @@ class TiposLocacionController extends Controller
         // Crear el nuevo tipo de locación
         $newTipoLocacion = $this->tipoLocacionService->createTipoLocacion($validatedData);
 
+        if ($newTipoLocacion instanceof \Illuminate\Http\JsonResponse) {
+            return $newTipoLocacion; // Retorna el error de validación si existe
+        }
+
         return response()->json($newTipoLocacion, 201);
     }
 
     public function update(int $id, Request $request)
     {
+        if ($id != $request->input('id')) {
+            return response()->json(['message' => 'El ID en la ruta no coincide con el ID en el cuerpo de la solicitud'], 400);
+        }
+
         // Validar los datos de entrada
         $validatedData = $request->validate([
-            'nombre' => 'required|string|max:100'
+            'nombre' => 'required|string|max:100',
+            'descripcion' => 'nullable|string|max:255'
         ]);
 
         // Actualizar el tipo de locación existente
