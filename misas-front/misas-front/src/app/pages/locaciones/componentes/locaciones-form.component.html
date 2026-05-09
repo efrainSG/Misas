@@ -38,8 +38,13 @@
           <select class="form-select"
           [class.highlight]="coloniaHighlight"
           formControlName="ColoniaId"
-          [disabled]="!form.get('CiudadId')?.value">
-            <option [ngValue]="null">Selecciona una colonia de {{ form.get('CiudadId')?.value ? ciudades.find(c => c.Id === form.get('CiudadId')?.value)?.Nombre : 'una ciudad' }}</option>
+          [disabled]="!colonias.length">
+            <option [ngValue]="null">
+              {{ cargandoColonias ? 'Cargando colonias...' :
+              colonias.length ? 'Selecciona una colonia' :
+              form.get('CiudadId')?.value ? 'No hay colonias registradas' :
+              'Selecciona una ciudad primero' }}
+            </option>
             <option *ngFor="let colonia of colonias" [ngValue]="colonia.Id">{{ colonia.Nombre }}</option>
           </select>
         </div>

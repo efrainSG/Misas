@@ -28,7 +28,7 @@ export class LocacionesListComponent implements OnChanges, OnInit {
     }
 
     cargar() {
-        this.servicio.getAll().subscribe({
+        this.servicio.getAllDescriptive().subscribe({
             next: (data) => {
                 this.locaciones = data;
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos

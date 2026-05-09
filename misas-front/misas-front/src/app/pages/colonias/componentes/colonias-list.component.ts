@@ -28,7 +28,7 @@ export class ColoniasListComponent implements OnInit, OnChanges {
     }
     
     cargar() {
-        this.servicio.getAll().subscribe({
+        this.servicio.getAllDescriptive().subscribe({
             next: (data) => {
                 this.colonias = data;
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos

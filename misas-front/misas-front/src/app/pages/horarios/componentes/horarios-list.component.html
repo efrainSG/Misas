@@ -7,7 +7,6 @@
         <table class="table table-hover align-middle">
             <thead class="table-light">
             <tr>
-                <th>Consecutivo</th>
                 <th>Día de la semana</th>
                 <th>Id de locación</th>
                 <th>Hora</th>
@@ -18,8 +17,7 @@
     
             <tbody>
             <tr *ngFor="let horario of horarios">
-                <td>{{ horario.Id }}</td>
-                <td class="fw-semibold">{{ horario.DiaSemana }}</td>
+                <td class="fw-semibold">{{ horario.DiaSemanaNombre }}</td>
                 <td>{{ horario.LocacionId }}</td>
                 <td>{{ horario.Hora }}</td>
                 <td>{{ horario.Activo }}</td>

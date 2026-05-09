@@ -16,6 +16,16 @@ class ColoniaService
         return $colonias;
     }
 
+    public function getAllDescriptive()
+    {
+        $colonias = DB::table('Colonias as C')
+            ->join('Ciudades as Ci', 'Ci.Id', '=', 'C.CiudadId')
+            ->select('C.Id', 'C.Nombre', 'C.CiudadId', 'Ci.Nombre as CiudadNombre')
+            ->get();
+
+        return $colonias;
+    }
+    
     public function getById(int $id)
     {
         $colonia = DB::table('Colonias')

@@ -13,6 +13,10 @@ export class LocationService {
     return this.http.get<any[]>(this.apiURL);
   }
 
+  getAllDescriptive() {
+    return this.http.get<any[]>(`${this.apiURL}/descriptivas`);
+  }
+  
   getById(id: number) {
     return this.http.get<any>(`${this.apiURL}/${id}`);
   }

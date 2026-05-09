@@ -19,6 +19,11 @@ class ColoniaController extends Controller
         return $this->coloniaService->getAll();
     }
 
+    public function getAllDescriptive()
+    {
+        return $this->coloniaService->getAllDescriptive();
+    }
+
     public function getById(int $id)
     {
         $data = $this->coloniaService->getById($id);

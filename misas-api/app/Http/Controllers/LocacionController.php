@@ -19,6 +19,11 @@ class LocacionController extends Controller
         return $this->locationService->getAll();
     }
 
+    public function getAllDescriptive()
+    {
+        return $this->locationService->getAllDescriptive();
+    }
+
     public function getById(int $id)
     {
         $data = $this->locationService->getById($id);

@@ -14,6 +14,17 @@ class LocationService {
         return $locaciones;
     }
 
+    public function getAllDescriptive()
+    {
+        $locaciones = DB::table('Locaciones as L')
+            ->join('Colonias as C', 'C.Id', '=', 'L.ColoniaId')
+            ->join('TipoLocaciones as T', 'T.Id', '=', 'L.TipoLocacionId')
+            ->select('L.Id', 'L.Nombre', 'L.Direccion', 'C.Nombre as ColoniaNombre', 'L.Telefono', 'T.Nombre as TipoLocacionNombre')
+            ->get();
+
+        return $locaciones;
+    }
+
     public function getById(int $id)
     {
         $locacion = DB::table('Locaciones')

@@ -13,6 +13,10 @@ export class ColoniaService {
     return this.http.get<any[]>(this.apiURL);
   }
 
+  getAllDescriptive() {
+    return this.http.get<any[]>(`${this.apiURL}/descriptivas`);
+  }
+
   getByCiudad(ciudadId: number) {
     return this.http.get<any[]>(`${this.apiURL}/ciudad/${ciudadId}`);
   }

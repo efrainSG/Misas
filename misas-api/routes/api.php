@@ -12,6 +12,7 @@ Route::get('/tiposLocaciones/{id}', [TiposLocacionController::class, 'getById'])
 Route::get('/tiposLocaciones/nombre/{nombre}', [TiposLocacionController::class, 'getByNombre']);
 
 Route::get('/locaciones', [LocacionController::class, 'getAll']);
+Route::get('/locaciones/descriptivas', [LocacionController::class, 'getAllDescriptive']);
 Route::get('/locaciones/{id}', [LocacionController::class, 'getById']);
 Route::get('/locaciones/nombre/{nombre}', [LocacionController::class, 'getByNombre']);
 Route::get('/locaciones/colonia/{coloniaId}', [LocacionController::class, 'getByColoniaId']);
@@ -26,6 +27,7 @@ Route::get('/ciudades/nombre/{nombre}', [CiudadController::class, 'getByNombre']
 Route::post('/ciudades', [CiudadController::class, 'create']);
 
 Route::get('/colonias', [ColoniaController::class, 'getAll']);
+Route::get('/colonias/descriptivas', [ColoniaController::class, 'getAllDescriptive']);
 Route::get('/colonias/{id}', [ColoniaController::class, 'getById']);
 Route::get('/colonias/nombre/{nombre}', [ColoniaController::class, 'getByNombre']);
 Route::get('/colonias/ciudad/{ciudadId}', [ColoniaController::class, 'getByCiudadId']);
