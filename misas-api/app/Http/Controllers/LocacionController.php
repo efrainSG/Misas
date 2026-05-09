@@ -97,4 +97,37 @@ class LocacionController extends Controller
 
         return response()->json($newLocacion, 201);
     }
+
+    public function update(int $id, Request $request)
+    {
+        // Validar los datos de entrada
+        $validatedData = $request->validate([
+            'nombre' => 'required|string|max:100',
+            'direccion' => 'required|string|max:500',
+            'tipoLocacionId' => 'required|integer',
+            'coloniaId' => 'required|integer',
+            'telefono' => 'nullable|string|max:20'
+        ]);
+
+        // Actualizar la locación existente
+        $updatedLocacion = $this->locationService->updateLocation($id, $validatedData);
+
+        if (!$updatedLocacion) {
+            return response()->json(['message' => 'No se encontró la locación para actualizar'], 404);
+        }
+
+        return response()->json($updatedLocacion);
+    }
+
+    public function delete(int $id)
+    {
+        $deleted = $this->locationService->deleteLocation($id);
+
+        if (!$deleted) {
+            return response()->json(['message' => 'No se encontró la locación para eliminar'], 404);
+        }
+
+        return response()->json(['message' => 'Locación eliminada exitosamente']);
+    }
 }
+?>

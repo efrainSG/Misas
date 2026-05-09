@@ -33,5 +33,40 @@ class TipoLocacionService {
 
         return $tipoLocacion;
     }
+
+    public function createTipoLocacion(array $data)
+    {
+        $tipoLocacionId = DB::table('TipoLocaciones')->insertGetId([
+            'Nombre' => $data['nombre'],
+        ]);
+
+        return $this->getById($tipoLocacionId);
+    }
+
+    public function updateTipoLocacion(int $id, array $data)
+    {
+        $updated = DB::table('TipoLocaciones')
+            ->where('Id', $id)
+            ->update(['Nombre' => $data['nombre']]);
+
+        if ($updated) {
+            return $this->getById($id);
+        } else {
+            return response()->json(['message' => 'Tipo de locación no encontrado'], 404);
+        }
+    }
+
+    public function deleteTipoLocacion(int $id)
+    {
+        $deleted = DB::table('TipoLocaciones')
+            ->where('Id', $id)
+            ->delete();
+
+        if ($deleted) {
+            return response()->json(['message' => 'Tipo de locación eliminado']);
+        } else {
+            return response()->json(['message' => 'Tipo de locación no encontrado'], 404);
+        }
+    }
 }
 ?>

@@ -33,5 +33,46 @@ class TiposLocacionController extends Controller
         $data = $this->tipoLocacionService->getByNombre($nombre);
         return $data;
     }
+
+    public function create(Request $request)
+    {
+        // Validar los datos de entrada
+        $validatedData = $request->validate([
+            'nombre' => 'required|string|max:100'
+        ]);
+
+        // Crear el nuevo tipo de locación
+        $newTipoLocacion = $this->tipoLocacionService->createTipoLocacion($validatedData);
+
+        return response()->json($newTipoLocacion, 201);
+    }
+
+    public function update(int $id, Request $request)
+    {
+        // Validar los datos de entrada
+        $validatedData = $request->validate([
+            'nombre' => 'required|string|max:100'
+        ]);
+
+        // Actualizar el tipo de locación existente
+        $updatedTipoLocacion = $this->tipoLocacionService->updateTipoLocacion($id, $validatedData);
+
+        if (!$updatedTipoLocacion) {
+            return response()->json(['message' => 'No se encontró el tipo de locación para actualizar'], 404);
+        }
+
+        return response()->json($updatedTipoLocacion);
+    }
+
+    public function delete(int $id)
+    {
+        $deleted = $this->tipoLocacionService->deleteTipoLocacion($id);
+
+        if (!$deleted) {
+            return response()->json(['message' => 'No se encontró el tipo de locación para eliminar'], 404);
+        }
+
+        return response()->json(['message' => 'Tipo de locación eliminado exitosamente']);
+    }
 }
 ?>

@@ -10,6 +10,9 @@ use App\Http\Controllers\TiposLocacionController;
 Route::get('/tiposLocaciones', [TiposLocacionController::class, 'getAll']);
 Route::get('/tiposLocaciones/{id}', [TiposLocacionController::class, 'getById']);
 Route::get('/tiposLocaciones/nombre/{nombre}', [TiposLocacionController::class, 'getByNombre']);
+Route::post('/tiposLocaciones', [TiposLocacionController::class, 'create']);
+Route::put('/tiposLocaciones/{id}', [TiposLocacionController::class, 'update']);
+Route::delete('/tiposLocaciones/{id}', [TiposLocacionController::class, 'delete']);
 
 Route::get('/locaciones', [LocacionController::class, 'getAll']);
 Route::get('/locaciones/descriptivas', [LocacionController::class, 'getAllDescriptive']);
@@ -20,11 +23,15 @@ Route::get('/locaciones/tipo/{tipoLocacionId}', [LocacionController::class, 'get
 Route::get('/locaciones/{id}/horarios', [LocacionController::class, 'getHorariosByLocacionId']);
 Route::get('/locaciones/byTipoAndColonia/{tipoLocacionId}/{coloniaId}', [LocacionController::class, 'getByTipoAndColonia']);
 Route::post('/locaciones', [LocacionController::class, 'create']);
+Route::put('/locaciones/{id}', [LocacionController::class, 'update']);
+Route::delete('/locaciones/{id}', [LocacionController::class, 'delete']);
 
 Route::get('/ciudades', [CiudadController::class, 'getAll']);
 Route::get('/ciudades/{id}', [CiudadController::class, 'getById']);
 Route::get('/ciudades/nombre/{nombre}', [CiudadController::class, 'getByNombre']);
 Route::post('/ciudades', [CiudadController::class, 'create']);
+Route::put('/ciudades/{id}', [CiudadController::class, 'update']);
+Route::delete('/ciudades/{id}', [CiudadController::class, 'delete']);
 
 Route::get('/colonias', [ColoniaController::class, 'getAll']);
 Route::get('/colonias/descriptivas', [ColoniaController::class, 'getAllDescriptive']);
@@ -32,6 +39,8 @@ Route::get('/colonias/{id}', [ColoniaController::class, 'getById']);
 Route::get('/colonias/nombre/{nombre}', [ColoniaController::class, 'getByNombre']);
 Route::get('/colonias/ciudad/{ciudadId}', [ColoniaController::class, 'getByCiudadId']);
 Route::post('/colonias', [ColoniaController::class, 'create']);
+Route::put('/colonias/{id}', [ColoniaController::class, 'update']);
+Route::delete('/colonias/{id}', [ColoniaController::class, 'delete']);
 
 Route::get('/horarios', [HorarioController::class, 'getAll']);
 Route::get('/horarios/{id}', [HorarioController::class, 'getById']);
@@ -40,3 +49,5 @@ Route::get('/horarios/diaSemana/{diaSemana}', [HorarioController::class, 'getByD
 Route::get('/horarios/activo/{activo}', [HorarioController::class, 'getByActivo']);
 Route::get('/horarios/locacion/{locacionId}', [HorarioController::class, 'getByLocacionId']);
 Route::post('/horarios', [HorarioController::class, 'create']);
+Route::put('/horarios/{id}', [HorarioController::class, 'update']);
+Route::delete('/horarios/{id}', [HorarioController::class, 'delete']);
