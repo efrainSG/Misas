@@ -13,7 +13,23 @@ export class CiudadService {
     return this.http.get<any[]>(this.apiURL);
   }
 
+  getById(id: number) {
+    return this.http.get<any>(`${this.apiURL}/${id}`);
+  }
+
+  getByNombre(nombre: string) {
+    return this.http.get<any>(`${this.apiURL}/nombre/${nombre}`);
+  }
+
   create(ciudad: any) {
     return this.http.post(this.apiURL, ciudad);
+  }
+
+  update(id: number, ciudad: any) {
+    return this.http.put(`${this.apiURL}/${id}`, ciudad);
+  }
+
+  delete(id: number) {
+    return this.http.delete(`${this.apiURL}/${id}`);
   }
 }
