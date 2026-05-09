@@ -9,6 +9,7 @@
           <tr>
             <th>Nombre</th>
             <th>Descripción</th>
+            <th>Acciones</th>
           </tr>
         </thead>
 
@@ -16,6 +17,10 @@
           <tr *ngFor="let tipoLocacion of tiposLocacion">
             <td class="fw-semibold">{{ tipoLocacion.Nombre }}</td>
             <td>{{ tipoLocacion.Descripcion }}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-primary">Editar</button>
+              <button class="btn btn-sm btn-outline-danger" (click)="eliminar(tipoLocacion.Id)">Eliminar</button>
+            </td>
           </tr>
         </tbody>
 

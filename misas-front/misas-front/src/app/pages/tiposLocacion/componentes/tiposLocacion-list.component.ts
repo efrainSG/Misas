@@ -38,4 +38,21 @@ export class TiposLocacionListComponent implements OnInit, OnChanges {
             }
         });
     }
+
+    eliminar(id: number) {
+        if (confirm('¿Está seguro de eliminar este tipo de locación?')) {
+            this.servicio.delete(id).subscribe({
+                next: () => {
+                    alert('Tipo de locación eliminado exitosamente');
+                    this.cargar(); // Recargar la lista después de eliminar
+                },
+                error: (err) => {
+                    console.error('Error al eliminar tipo de locación', err);
+                    alert('Error al eliminar el tipo de locación');
+                }
+            });
+        }
+    }
+
+    
 }

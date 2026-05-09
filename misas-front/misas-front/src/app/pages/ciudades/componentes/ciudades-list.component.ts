@@ -38,4 +38,19 @@ export class CiudadesListComponent implements OnInit, OnChanges {
             }
         });
     }
+
+    eliminar(id: number) {
+        if (confirm('¿Está seguro de que desea eliminar esta ciudad?')) {
+            this.servicio.delete(id).subscribe({
+                next: () => {
+                    alert('Ciudad eliminada exitosamente');
+                    this.cargar(); // Recargar la lista después de eliminar
+                },
+                error: (err) => {
+                    console.error('Error al eliminar ciudad', err);
+                    alert('Error al eliminar la ciudad');
+                }
+            });
+        }
+    }
 }

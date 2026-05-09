@@ -8,7 +8,7 @@ class TipoLocacionService {
     public function getAll()
     {
         $tiposLocacion = DB::table('TipoLocaciones')
-            ->select('Id', 'Nombre')
+            ->select('Id', 'Nombre', 'Descripcion')
             ->get();
 
         return $tiposLocacion;
@@ -17,7 +17,7 @@ class TipoLocacionService {
     public function getById(int $id)
     {
         $tipoLocacion = DB::table('TipoLocaciones')
-            ->select('Id', 'Nombre')
+            ->select('Id', 'Nombre', 'Descripcion')
             ->where('Id', $id)
             ->first();
 
@@ -27,7 +27,7 @@ class TipoLocacionService {
     public function getByNombre(string $nombre)
     {
         $tipoLocacion = DB::table('TipoLocaciones')
-            ->select('Id', 'Nombre')
+            ->select('Id', 'Nombre', 'Descripcion')
             ->where('Nombre', 'like', '%' . $nombre . '%')
             ->get();
 
@@ -38,6 +38,7 @@ class TipoLocacionService {
     {
         $tipoLocacionId = DB::table('TipoLocaciones')->insertGetId([
             'Nombre' => $data['nombre'],
+            'Descripcion' => $data['descripcion'] ?? null
         ]);
 
         return $this->getById($tipoLocacionId);
@@ -47,7 +48,10 @@ class TipoLocacionService {
     {
         $updated = DB::table('TipoLocaciones')
             ->where('Id', $id)
-            ->update(['Nombre' => $data['nombre']]);
+            ->update([
+                'Nombre' => $data['nombre'],
+                'Descripcion' => $data['descripcion'] ?? null
+            ]);
 
         if ($updated) {
             return $this->getById($id);

@@ -38,4 +38,19 @@ export class LocacionesListComponent implements OnChanges, OnInit {
             }
         });
     }
+
+    eliminar(id: number) {
+        if (confirm('¿Estás seguro de que deseas eliminar esta locación?')) {
+            this.servicio.delete(id).subscribe({
+                next: () => {
+                    alert('Locación eliminada exitosamente');
+                    this.cargar(); // Recargar la lista después de eliminar
+                },
+                error: (err) => {
+                    console.error('Error al eliminar locación', err);
+                    alert('Error al eliminar la locación');
+                }
+            });
+        }
+    }
 }

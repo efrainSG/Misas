@@ -38,7 +38,8 @@ class TiposLocacionController extends Controller
     {
         // Validar los datos de entrada
         $validatedData = $request->validate([
-            'nombre' => 'required|string|max:100'
+            'nombre' => 'required|string|max:100',
+            'descripcion' => 'nullable|string|max:255'
         ]);
 
         // Crear el nuevo tipo de locación

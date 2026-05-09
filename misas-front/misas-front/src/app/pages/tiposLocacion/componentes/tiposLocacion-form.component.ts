@@ -31,7 +31,12 @@ export class TiposLocacionFormComponent implements OnInit {
 
     crear() {
         if (this.form.valid) {
-            this.service.create(this.form.value).subscribe({
+            const newTipoLocacion = {
+            nombre: this.form.value.Nombre,
+            descripcion: this.form.value.Descripcion
+        };
+
+            this.service.create(newTipoLocacion).subscribe({
                 next: () => {
                     this.onCreated.emit();
                     this.form.reset();

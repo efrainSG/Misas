@@ -45,4 +45,19 @@ export class HorariosListComponent implements OnInit , OnChanges{
         const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         return diasSemana[diaSemana] || 'Desconocido';
     }
+
+    eliminar(id: number) {
+        if (confirm('¿Está seguro de que desea eliminar este horario?')) {
+            this.servicio.delete(id).subscribe({
+                next: () => {
+                    alert('Horario eliminado exitosamente');
+                    this.cargar(); // Recargar la lista después de eliminar
+                },
+                error: (err) => {
+                    console.error('Error al eliminar horario', err);
+                    alert('Error al eliminar el horario');
+                }
+            });
+        }
+    }
 }

@@ -38,4 +38,19 @@ export class ColoniasListComponent implements OnInit, OnChanges {
             }
         });
     }
+
+    eliminar(id: number) {
+        if (confirm('¿Estás seguro de que deseas eliminar esta colonia?')) {
+            this.servicio.delete(id).subscribe({
+                next: () => {
+                    alert('Colonia eliminada exitosamente');
+                    this.cargar(); // Recargar la lista después de eliminar
+                },
+                error: (err) => {
+                    console.error('Error al eliminar colonia', err);
+                    alert('Error al eliminar la colonia');
+                }
+            });
+        }
+    }
 }

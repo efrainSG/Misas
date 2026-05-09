@@ -9,6 +9,7 @@
             <tr>
                 <th>Nombre</th>
                 <th>Ciudad</th>
+                <th>Acciones</th>
             </tr>
             </thead>
     
@@ -16,6 +17,14 @@
             <tr *ngFor="let colonia of colonias">
                 <td class="fw-semibold">{{ colonia.Nombre }}</td>
                 <td>{{ colonia.CiudadNombre }}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary">
+                        Editar
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="eliminar(colonia.Id)">
+                        Eliminar
+                    </button>
+                </td>
             </tr>
             </tbody>
         </table>

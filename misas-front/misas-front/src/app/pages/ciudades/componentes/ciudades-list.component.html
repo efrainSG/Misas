@@ -8,12 +8,17 @@
             <thead class="table-light">
             <tr>
                 <th>Nombre</th>
+                <th>Acciones</th>
             </tr>
             </thead>
     
             <tbody>
             <tr *ngFor="let ciudad of ciudades">
                 <td class="fw-semibold">{{ ciudad.Nombre }}</td>
+                <td>
+                  <button class="btn btn-sm btn-outline-primary">Editar</button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="eliminar(ciudad.Id)">Eliminar</button>
+                </td>
             </tr>
             </tbody>
         </table>
