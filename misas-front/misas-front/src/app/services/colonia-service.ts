@@ -14,7 +14,7 @@ export class ColoniaService {
   }
 
   getByCiudad(ciudadId: number) {
-    return this.http.get<any[]>(`${this.apiURL}${ciudadId}`);
+    return this.http.get<any[]>(`${this.apiURL}/ciudad/${ciudadId}`);
   }
 
   create(colonia: any) {

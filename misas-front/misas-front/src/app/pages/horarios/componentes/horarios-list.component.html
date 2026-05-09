@@ -1,0 +1,32 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-body">
+
+      <h4 class="card-title mb-3">Horarios</h4>
+
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+            <tr>
+                <th>Consecutivo</th>
+                <th>Día de la semana</th>
+                <th>Id de locación</th>
+                <th>Hora</th>
+                <th>Activo</th>
+                <th>Notas</th>
+            </tr>
+            </thead>
+    
+            <tbody>
+            <tr *ngFor="let horario of horarios">
+                <td>{{ horario.Id }}</td>
+                <td class="fw-semibold">{{ horario.DiaSemana }}</td>
+                <td>{{ horario.LocacionId }}</td>
+                <td>{{ horario.Hora }}</td>
+                <td>{{ horario.Activo }}</td>
+                <td>{{ horario.Notas }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+  </div>
+</div>

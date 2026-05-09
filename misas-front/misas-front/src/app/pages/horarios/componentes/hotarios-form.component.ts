@@ -40,15 +40,17 @@ export class HorariosFormComponent implements OnInit{
         private ciudadService: CiudadService,
         private coloniaService: ColoniaService,
         private locationService: LocationService,
-        private formBuilder: FormBuilder,
-        private cdr: ChangeDetectorRef
+        private formBuilder: FormBuilder
     ) {}
 
     ngOnInit() {
         this.form = this.formBuilder.group({
             DiaSemana: [0],
             Hora: [''],
-            Activo: [''],
+            Activo: [true],
+            CiudadId: [null],
+            ColoniaId: [null],
+            TipoLocacionId: [null],
             LocacionId: [null],
             Notas: ['']
         });
@@ -56,31 +58,39 @@ export class HorariosFormComponent implements OnInit{
         this.cargarCatalogos();
 
         this.form.get('CiudadId')?.valueChanges.subscribe(ciudadId => {
-        if (ciudadId) {
+            this.locaciones = [];
+            console.log('Ciudad seleccionada:', ciudadId);
+            this.form.patchValue({
+                ColoniaId: null,
+                LocacionId: null
+            });
+
+            if (!ciudadId) {
+                this.colonias = [];
+                return;
+            }
+
             this.coloniaService.getByCiudad(ciudadId).subscribe({
                 next: (colonias) => {
                     this.colonias = colonias;
-                    this.form.patchValue({ ColoniaId: null }); // Reset colonia selection when ciudad changes
-                    this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
                     this.coloniaHighlight = true;
                     setTimeout(() => {
                         this.coloniaHighlight = false;
                     }, 800);
                 }
             });
-        }
         });
 
-        this.form.get('ColoniaId')?.valueChanges.subscribe(coloniaId => {
-            if (coloniaId) {
-                this.locationService.getByColonia(coloniaId).subscribe({
-                    next: (locaciones) => {
-                        this.locaciones = locaciones;
-                        this.form.patchValue({ LocacionId: null }); // Reset locacion selection when colonia changes
-                        this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
-                    }
-                });
-            }
+        this.form.get('TipoLocacionId')?.valueChanges.subscribe((tipoLocacionId) => {
+        console.info("TipoLocacionId", tipoLocacionId);
+        console.info("ColoniaId", this.form.value.ColoniaId);
+            this.cargarLocaciones(tipoLocacionId, this.form.value.ColoniaId);
+        });
+
+        this.form.get('ColoniaId')?.valueChanges.subscribe((coloniaId) => {
+        console.info("TipoLocacionId", this.form.value.TipoLocacionId);
+        console.info("ColoniaId", coloniaId);
+            this.cargarLocaciones(this.form.value.TipoLocacionId, coloniaId);
         });
     }
 
@@ -88,16 +98,31 @@ export class HorariosFormComponent implements OnInit{
         this.ciudadService.getAll().subscribe({
             next: (ciudades) => {
                 this.ciudades = ciudades;
-                this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             }
         });
 
         this.tipoLocacionService.getAll().subscribe({
             next: (tipos) => {
                 this.tiposLocacion = tipos;
-                this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             }
         });
+    }
+
+    cargarLocaciones(tipoLocacionId: number | null, coloniaId: number | null) {
+
+        if (!tipoLocacionId || !coloniaId) {
+            this.locaciones = [];
+            return;
+        }
+
+        this.locationService
+            .getByTipoAndColonia(tipoLocacionId, coloniaId)
+            .subscribe({
+                next: (locaciones) => {
+                    console.info('Locaciones cargadas:', locaciones);
+                    this.locaciones = locaciones;
+                }
+            });
     }
 
     crear() {
@@ -109,8 +134,11 @@ export class HorariosFormComponent implements OnInit{
             hora: this.form.value.Hora,
             activo: this.form.value.Activo,
             locacionId: this.form.value.LocacionId,
-            notas: this.form.value.Notas
+            notas: this.form.value.Notas,
+            tipoLocacionId: this.form.value.TipoLocacionId
         };
+        
+        console.info('Creando horario con datos:', nuevoHorario);
         
         this.horarioService.create(nuevoHorario).subscribe({
             next: () => {

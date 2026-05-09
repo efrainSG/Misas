@@ -4,6 +4,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\DB;
 
 class LocationService {
+
     public function getAll()
     {
         $locaciones = DB::table('Locaciones')
@@ -53,6 +54,17 @@ class LocationService {
         return $locaciones;
     }
 
+    public function getByTipoAndColonia(int $tipoLocacionId, int $coloniaId)
+    {
+        $locaciones = DB::table('Locaciones')
+            ->select('Id', 'Nombre', 'Direccion', 'ColoniaId', 'Telefono', 'TipoLocacionId')
+            ->where('TipoLocacionId', $tipoLocacionId)
+            ->where('ColoniaId', $coloniaId)
+            ->get();
+
+        return $locaciones;
+    }
+    
     public function getHorariosByLocacionId(int $locacionId)
     {
         $horarios = DB::table('Horarios as h')

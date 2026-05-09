@@ -5,6 +5,11 @@ use App\Http\Controllers\LocacionController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\ColoniaController;
 use App\Http\Controllers\HorarioController;
+use App\Http\Controllers\TiposLocacionController;
+
+Route::get('/tiposLocaciones', [TiposLocacionController::class, 'getAll']);
+Route::get('/tiposLocaciones/{id}', [TiposLocacionController::class, 'getById']);
+Route::get('/tiposLocaciones/nombre/{nombre}', [TiposLocacionController::class, 'getByNombre']);
 
 Route::get('/locaciones', [LocacionController::class, 'getAll']);
 Route::get('/locaciones/{id}', [LocacionController::class, 'getById']);
@@ -12,6 +17,7 @@ Route::get('/locaciones/nombre/{nombre}', [LocacionController::class, 'getByNomb
 Route::get('/locaciones/colonia/{coloniaId}', [LocacionController::class, 'getByColoniaId']);
 Route::get('/locaciones/tipo/{tipoLocacionId}', [LocacionController::class, 'getByTipoLocacionId']);
 Route::get('/locaciones/{id}/horarios', [LocacionController::class, 'getHorariosByLocacionId']);
+Route::get('/locaciones/byTipoAndColonia/{tipoLocacionId}/{coloniaId}', [LocacionController::class, 'getByTipoAndColonia']);
 Route::post('/locaciones', [LocacionController::class, 'create']);
 
 Route::get('/ciudades', [CiudadController::class, 'getAll']);

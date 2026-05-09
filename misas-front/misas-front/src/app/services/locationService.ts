@@ -21,6 +21,10 @@ export class LocationService {
     return this.http.get<any[]>(`${this.apiURL}/byColonia/${coloniaId}`);
   }
 
+  getByTipoAndColonia(tipoLocacionId: number, coloniaId: number) {
+    return this.http.get<any[]>(`${this.apiURL}/byTipoAndColonia/${tipoLocacionId}/${coloniaId}`);
+  }
+
   create(location: any) {
     return this.http.post(this.apiURL, location);
   }

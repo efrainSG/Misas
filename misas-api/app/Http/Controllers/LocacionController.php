@@ -45,6 +45,12 @@ class LocacionController extends Controller
         return $data;
     }
 
+    public function getByTipoAndColonia(int $tipoLocacionId, int $coloniaId)
+    {
+        $data = $this->locationService->getByTipoAndColonia($tipoLocacionId, $coloniaId);
+        return $data;
+    }
+
     public function getHorariosByLocacionId(int $locacionId)
     {
         $locacion = $this->locationService->getById($locacionId);

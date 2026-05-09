@@ -7,6 +7,7 @@
       <table class="table table-hover align-middle">
         <thead class="table-light">
           <tr>
+            <th>Consecutivo</th>
             <th>Nombre</th>
             <th>Dirección</th>
             <th>Teléfono</th>
@@ -17,6 +18,7 @@
 
         <tbody>
           <tr *ngFor="let locacion of locaciones">
+            <td>{{ locacion.Id }}</td>
             <td class="fw-semibold">{{ locacion.Nombre }}</td>
             <td>{{ locacion.Direccion }}</td>
             <td>{{ locacion.Telefono || '—' }}</td>
