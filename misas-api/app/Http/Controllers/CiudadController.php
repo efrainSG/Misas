@@ -73,4 +73,4 @@ class CiudadController extends Controller
         }
         return response()->json(['message' => 'Ciudad eliminada exitosamente']);
     }
-?>
+}
