@@ -1,21 +1,21 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from "@angular/core";
-import { ColoniaService } from "../../../services/colonia-service";
+import { TipoLocacionService } from "../../../services/tipo-locacion-service";
 
 @Component({
-    selector: 'app-colonias-list-component',
-    templateUrl: './colonias-list.component.html',
-    styleUrl: './colonias-list.component.css',
+    selector: 'app-tipos-locacion-list-component',
+    templateUrl: './tiposLocacion-list.component.html',
+    styleUrl: './tiposLocacion-list.component.css',
     standalone: true,
     imports: [CommonModule]
 })
 
-export class ColoniasListComponent implements OnInit, OnChanges {
-    colonias: any;
+export class TiposLocacionListComponent implements OnInit, OnChanges {
+    tiposLocacion: any;
     @Input() refreshFlag: boolean = false;
 
     constructor(
-        private servicio: ColoniaService,
+        private servicio: TipoLocacionService,
         private cdr: ChangeDetectorRef
     ) {}
 
@@ -26,31 +26,33 @@ export class ColoniasListComponent implements OnInit, OnChanges {
     ngOnChanges(): void {
         this.cargar();
     }
-    
+
     cargar() {
-        this.servicio.getAllDescriptive().subscribe({
+        this.servicio.getAll().subscribe({
             next: (data) => {
-                this.colonias = data;
+                this.tiposLocacion = data;
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             },
             error: (err) => {
-                console.error('Error al cargar colonias', err);
+                console.error('Error al cargar tipos de locación', err);
             }
         });
     }
 
     eliminar(id: number) {
-        if (confirm('¿Estás seguro de que deseas eliminar esta colonia?')) {
+        if (confirm('¿Está seguro de eliminar este tipo de locación?')) {
             this.servicio.delete(id).subscribe({
                 next: () => {
-                    alert('Colonia eliminada exitosamente');
+                    alert('Tipo de locación eliminado exitosamente');
                     this.cargar(); // Recargar la lista después de eliminar
                 },
                 error: (err) => {
-                    console.error('Error al eliminar colonia', err);
-                    alert('Error al eliminar la colonia');
+                    console.error('Error al eliminar tipo de locación', err);
+                    alert('Error al eliminar el tipo de locación');
                 }
             });
         }
     }
+
+    
 }

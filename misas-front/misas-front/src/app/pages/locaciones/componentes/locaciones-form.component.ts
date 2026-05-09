@@ -22,6 +22,7 @@ export class LocacionesFormComponent implements OnInit {
     colonias: any[] = [];
     tiposLocacion: any[] = [];
     coloniaHighlight = false;
+    cargandoColonias = false;
 
     form!: FormGroup;
 
@@ -48,15 +49,21 @@ export class LocacionesFormComponent implements OnInit {
 
         this.form.get('CiudadId')?.valueChanges.subscribe(ciudadId => {
         if (ciudadId) {
+            this.cargandoColonias = true;
             this.coloniaService.getByCiudad(ciudadId).subscribe({
                 next: (colonias) => {
                     this.colonias = colonias;
                     this.form.patchValue({ ColoniaId: null }); // Reset colonia selection when ciudad changes
                     this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
                     this.coloniaHighlight = true;
+                    this.cargandoColonias = false;
                     setTimeout(() => {
                         this.coloniaHighlight = false;
                     }, 800);
+                },
+                error: (err) => {
+                    console.error('Error al cargar colonias', err);
+                    this.cargandoColonias = false;
                 }
             });
         }
@@ -71,9 +78,11 @@ export class LocacionesFormComponent implements OnInit {
             }
         });
 
-        this.tipoLocacionService.getAll().then((tipos) => {
-            this.tiposLocacion = tipos;
-            this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
+        this.tipoLocacionService.getAll().subscribe({
+            next: (tipos) => {
+                this.tiposLocacion = tipos;
+                this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
+            }
         });
     }
 

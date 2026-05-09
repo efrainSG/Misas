@@ -5,23 +5,31 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class TipoLocacionService {
-  private apiURL = "http://localhost/api/tipoLocaciones";
-
-  private fakeData = [
-    { Id: 1, Nombre: 'Basílica' },
-    { Id: 2, Nombre: 'Parroquia' },
-    { Id: 3, Nombre: 'Capilla' },
-  ];
+  private apiURL = "http://localhost/api/tiposLocaciones";
 
   constructor(private http: HttpClient) {}
 
   getAll() {
-    //return this.http.get<any[]>(this.apiURL);
-    return new Promise<any[]>((resolve) => {
-      setTimeout(() => {
-        resolve(this.fakeData);
-      }, 500); // Simula un retraso de 500ms
-    });
+    return this.http.get<any[]>(this.apiURL);
+  }
 
+  getById(id: number) {
+    return this.http.get<any>(`${this.apiURL}/${id}`);
+  }
+
+  getByNombre(nombre: string) {
+    return this.http.get<any>(`${this.apiURL}/nombre/${nombre}`);
+  }
+
+  create(tipoLocacion: any) {
+    return this.http.post(this.apiURL, tipoLocacion);
+  }
+
+  update(id: number, tipoLocacion: any) {
+    return this.http.put(`${this.apiURL}/${id}`, tipoLocacion);
+  }
+
+  delete(id: number) {
+    return this.http.delete(`${this.apiURL}/${id}`);
   }
 }

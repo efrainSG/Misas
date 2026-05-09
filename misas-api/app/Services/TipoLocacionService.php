@@ -1,0 +1,76 @@
+<?php
+namespace App\Services;
+
+use Illuminate\Support\Facades\DB;
+
+class TipoLocacionService {
+    
+    public function getAll()
+    {
+        $tiposLocacion = DB::table('TipoLocaciones')
+            ->select('Id', 'Nombre', 'Descripcion')
+            ->get();
+
+        return $tiposLocacion;
+    }
+
+    public function getById(int $id)
+    {
+        $tipoLocacion = DB::table('TipoLocaciones')
+            ->select('Id', 'Nombre', 'Descripcion')
+            ->where('Id', $id)
+            ->first();
+
+        return $tipoLocacion;
+    }
+
+    public function getByNombre(string $nombre)
+    {
+        $tipoLocacion = DB::table('TipoLocaciones')
+            ->select('Id', 'Nombre', 'Descripcion')
+            ->where('Nombre', 'like', '%' . $nombre . '%')
+            ->get();
+
+        return $tipoLocacion;
+    }
+
+    public function createTipoLocacion(array $data)
+    {
+        $tipoLocacionId = DB::table('TipoLocaciones')->insertGetId([
+            'Nombre' => $data['nombre'],
+            'Descripcion' => $data['descripcion'] ?? null
+        ]);
+
+        return $this->getById($tipoLocacionId);
+    }
+
+    public function updateTipoLocacion(int $id, array $data)
+    {
+        $updated = DB::table('TipoLocaciones')
+            ->where('Id', $id)
+            ->update([
+                'Nombre' => $data['nombre'],
+                'Descripcion' => $data['descripcion'] ?? null
+            ]);
+
+        if ($updated) {
+            return $this->getById($id);
+        } else {
+            return response()->json(['message' => 'Tipo de locación no encontrado'], 404);
+        }
+    }
+
+    public function deleteTipoLocacion(int $id)
+    {
+        $deleted = DB::table('TipoLocaciones')
+            ->where('Id', $id)
+            ->delete();
+
+        if ($deleted) {
+            return response()->json(['message' => 'Tipo de locación eliminado']);
+        } else {
+            return response()->json(['message' => 'Tipo de locación no encontrado'], 404);
+        }
+    }
+}
+?>

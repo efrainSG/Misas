@@ -12,6 +12,7 @@
             <th>Teléfono</th>
             <th>Colonia</th>
             <th>Tipo</th>
+            <th>Acciones</th>
           </tr>
         </thead>
 
@@ -20,8 +21,15 @@
             <td class="fw-semibold">{{ locacion.Nombre }}</td>
             <td>{{ locacion.Direccion }}</td>
             <td>{{ locacion.Telefono || '—' }}</td>
-            <td>{{ locacion.ColoniaId }}</td>
-            <td>{{ locacion.TipoLocacionId }}</td>
+            <td>{{ locacion.ColoniaNombre }}</td>
+            <td>{{ locacion.TipoLocacionNombre }}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-primary me-2">
+                <i class="bi bi-pencil"></i> Editar
+              </button>
+              <button class="btn btn-sm btn-outline-danger" (click)="eliminar(locacion.Id)">
+                <i class="bi bi-trash"></i> Eliminar
+              </button>
           </tr>
         </tbody>
 

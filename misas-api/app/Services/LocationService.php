@@ -4,10 +4,22 @@ namespace App\Services;
 use Illuminate\Support\Facades\DB;
 
 class LocationService {
+
     public function getAll()
     {
         $locaciones = DB::table('Locaciones')
             ->select('Id', 'Nombre', 'Direccion', 'ColoniaId', 'Telefono', 'TipoLocacionId')
+            ->get();
+
+        return $locaciones;
+    }
+
+    public function getAllDescriptive()
+    {
+        $locaciones = DB::table('Locaciones as L')
+            ->join('Colonias as C', 'C.Id', '=', 'L.ColoniaId')
+            ->join('TipoLocaciones as T', 'T.Id', '=', 'L.TipoLocacionId')
+            ->select('L.Id', 'L.Nombre', 'L.Direccion', 'C.Nombre as ColoniaNombre', 'L.Telefono', 'T.Nombre as TipoLocacionNombre')
             ->get();
 
         return $locaciones;
@@ -53,6 +65,17 @@ class LocationService {
         return $locaciones;
     }
 
+    public function getByTipoAndColonia(int $tipoLocacionId, int $coloniaId)
+    {
+        $locaciones = DB::table('Locaciones')
+            ->select('Id', 'Nombre', 'Direccion', 'ColoniaId', 'Telefono', 'TipoLocacionId')
+            ->where('TipoLocacionId', $tipoLocacionId)
+            ->where('ColoniaId', $coloniaId)
+            ->get();
+
+        return $locaciones;
+    }
+    
     public function getHorariosByLocacionId(int $locacionId)
     {
         $horarios = DB::table('Horarios as h')

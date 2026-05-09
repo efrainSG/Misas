@@ -28,7 +28,7 @@ export class LocacionesListComponent implements OnChanges, OnInit {
     }
 
     cargar() {
-        this.servicio.getAll().subscribe({
+        this.servicio.getAllDescriptive().subscribe({
             next: (data) => {
                 this.locaciones = data;
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
@@ -37,5 +37,20 @@ export class LocacionesListComponent implements OnChanges, OnInit {
                 console.error('Error al cargar locaciones', err);
             }
         });
+    }
+
+    eliminar(id: number) {
+        if (confirm('¿Estás seguro de que deseas eliminar esta locación?')) {
+            this.servicio.delete(id).subscribe({
+                next: () => {
+                    alert('Locación eliminada exitosamente');
+                    this.cargar(); // Recargar la lista después de eliminar
+                },
+                error: (err) => {
+                    console.error('Error al eliminar locación', err);
+                    alert('Error al eliminar la locación');
+                }
+            });
+        }
     }
 }
