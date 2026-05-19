@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
 import { TipoLocacionService } from "../../../services/tipo-locacion-service";
+import { ApiResponse } from "../../../interfaces/ApiResponse";
 
 @Component({
     selector: 'app-tipos-locacion-list-component',
@@ -30,11 +31,12 @@ export class TiposLocacionListComponent implements OnInit, OnChanges {
 
     cargar() {
         this.servicio.getAll().subscribe({
-            next: (data) => {
-                this.tiposLocacion = data;
+            next: (response: ApiResponse<any[]>) => {
+                this.tiposLocacion = response.data;
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             },
             error: (err) => {
+                console.error('Error al cargar los tipos de locación', err);
             }
         });
     }
@@ -42,11 +44,12 @@ export class TiposLocacionListComponent implements OnInit, OnChanges {
     eliminar(id: number) {
         if (confirm('¿Está seguro de eliminar este tipo de locación?')) {
             this.servicio.delete(id).subscribe({
-                next: () => {
-                    alert('Tipo de locación eliminado exitosamente');
+                next: (response: ApiResponse<any>) => {
+                    alert(response.message);
                     this.cargar(); // Recargar la lista después de eliminar
                 },
                 error: (err) => {
+                    console.error('Error al eliminar el tipo de locación', err);
                     alert('Error al eliminar el tipo de locación');
                 }
             });

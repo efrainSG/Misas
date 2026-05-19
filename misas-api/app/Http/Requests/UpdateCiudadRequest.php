@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateCiudadRequest extends FormRequest
 {
@@ -27,7 +28,8 @@ class UpdateCiudadRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                'unique:Ciudades,Nombre,'->ignore($this->route('id'), 'Id'),
+                Rule::unique('Ciudades', 'Nombre')
+                    ->ignore($this->route('id')),
             ],
         ];
     }

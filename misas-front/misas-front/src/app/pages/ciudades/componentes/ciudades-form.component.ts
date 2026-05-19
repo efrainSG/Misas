@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { CiudadService } from "../../../services/ciudad-service";
+import { ApiResponse } from "../../../interfaces/ApiResponse";
 
 @Component({
     selector: 'app-ciudades-form-component',
@@ -52,11 +53,14 @@ export class CiudadesFormComponent implements OnInit {
         };
 
         this.ciudadService.create(newCiudad).subscribe({
-            next: () => {
+            next: (response: ApiResponse<any>) => {
+                alert(response.message);
                 this.onCreated.emit();
                 this.form.reset();
             },
             error: (err) => {
+                console.error('Error al crear la ciudad:', err);
+                alert('Error al crear la ciudad.');
             }
         });
     }
@@ -68,11 +72,13 @@ export class CiudadesFormComponent implements OnInit {
                 nombre: this.form.value.Nombre
             };
             this.ciudadService.update(this.ciudad.Id, updatedCiudad).subscribe({
-                next: () => {
+                next: (response: ApiResponse<any>) => {
+                    alert(response.message);
                     this.onCreated.emit();
                     this.form.reset();
                 },
                 error: (err) => {
+                    console.error('Error al actualizar la ciudad:', err);
                 }
             });
         }

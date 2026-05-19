@@ -60,7 +60,7 @@ class ColoniaService
     {
             $coloniaId = DB::table('Colonias')->insertGetId([
             'Nombre' => $data['nombre'],
-            'CiudadId' => $data['ciudadId'],
+            'CiudadId' => $data['ciudadid'],
         ]);
 
         return $this->getById($coloniaId);
@@ -72,8 +72,8 @@ class ColoniaService
         if (isset($data['nombre'])) {
             $updateData['Nombre'] = $data['nombre'];
         }
-        if (isset($data['ciudadId'])) {
-            $updateData['CiudadId'] = $data['ciudadId'];
+        if (isset($data['ciudadid'])) {
+            $updateData['CiudadId'] = $data['ciudadid'];
         }
 
         if (empty($updateData)) {

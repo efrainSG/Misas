@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateTipoLocacionRequest extends FormRequest
 {
@@ -23,9 +24,14 @@ class UpdateTipoLocacionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nombre' => 'required|string|max:100',
+            'nombre' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::unique('TipoLocaciones', 'Nombre')
+                    ->ignore($this->route('id')),
+            ],
             'descripcion' => 'nullable|string|max:255',
-            'unique:TipoLocaciones,Nombre,'->ignore($this->route('id'), 'Id'),
         ];
     }
 }

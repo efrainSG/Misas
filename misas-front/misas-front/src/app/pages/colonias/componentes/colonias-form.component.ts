@@ -1,9 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { ReactiveFormsModule, FormBuilder, FormGroup } from "@angular/forms";
-
 import { CiudadService } from "../../../services/ciudad-service";
 import { ColoniaService } from "../../../services/colonia-service";
+import { ApiResponse } from "../../../interfaces/ApiResponse";
 
 @Component({
     selector: 'app-colonias-form-component',
@@ -54,11 +54,12 @@ export class ColoniasFormComponent implements OnInit {
 
     cargarCiudades() {
         this.ciudadService.getAll().subscribe({
-            next: (data) => {
-                this.ciudades = data;
+            next: (response: ApiResponse<any[]>) => {
+                this.ciudades = response.data;
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             },
             error: (err) => {
+                console.error('Error al cargar las ciudades:', err);
             }
         });
     }
@@ -69,16 +70,19 @@ export class ColoniasFormComponent implements OnInit {
 
         const newColonia = {
             nombre: this.form.value.Nombre,
-            ciudadId: this.form.value.CiudadId
+            ciudadid: this.form.value.CiudadId
         };
 
         this.coloniaService.create(newColonia).subscribe({
-            next: () => {
+            next: (response: ApiResponse<any>) => {
+                alert(response.message);
                 this.onCreated.emit(); // Emitir evento para indicar que se creó una nueva colonia
                 this.form.reset();
 
             },
             error: (err) => {
+                console.error('Error al crear la colonia:', err);
+                alert('Error al crear la colonia');
             }
         });
     }
@@ -88,14 +92,17 @@ export class ColoniasFormComponent implements OnInit {
             const updatedColonia = {
                 id: this.colonia.Id,
                 nombre: this.form.value.Nombre,
-                ciudadId: this.form.value.CiudadId
+                ciudadid: this.form.value.CiudadId
             };
             this.coloniaService.update(this.colonia.Id, updatedColonia).subscribe({
-                next: () => {
+                next: (response: ApiResponse<any>) => {
+                    alert(response.message);
                     this.onCreated.emit();
                     this.form.reset();
                 },
                 error: (err) => {
+                    console.error('Error al actualizar la colonia:', err);
+                    alert('Error al actualizar la colonia');
                 }
             });
         }

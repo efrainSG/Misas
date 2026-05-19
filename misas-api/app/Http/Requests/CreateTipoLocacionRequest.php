@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CreateTipoLocacionRequest extends FormRequest
 {
@@ -23,7 +24,13 @@ class CreateTipoLocacionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nombre' => 'required|string|max:100',
+            'nombre' => //'required|string|max:100',
+            [
+                'required',
+                'string',
+                'max:100',
+                Rule::Unique::make('TipoLocaciones', 'Nombre'),
+            ]
             'descripcion' => 'nullable|string|max:255',
         ];
     }

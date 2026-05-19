@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\ColoniaService;
+use App\Http\Requests\CreateColoniaRequest;
+use App\Http\Requests\UpdateColoniaRequest;
 
 class ColoniaController extends Controller
 {
@@ -16,63 +18,85 @@ class ColoniaController extends Controller
 
     public function getAll()
     {
-        return $this->coloniaService->getAll();
+        return response()->json([
+            'success' => true,
+            'message' => 'Colonias obtenidas exitosamente',
+            'data' => $this->coloniaService->getAll()
+        ]);
     }
 
     public function getAllDescriptive()
     {
-        return $this->coloniaService->getAllDescriptive();
+        return response()->json([
+            'success' => true,
+            'message' => 'Colonias obtenidas exitosamente',
+            'data' => $this->coloniaService->getAllDescriptive()
+        ]);
     }
 
     public function getById(int $id)
     {
         $data = $this->coloniaService->getById($id);
         if (!$data) {
-            return response()->json(['message' => 'No se encontraron colonias con ese ID'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontraron colonias con ese ID'
+            ], 404);
         }
-        return $data;
+        return response()->json([
+            'success' => true,
+            'message' => 'Colonia obtenida exitosamente',
+            'data' => $data
+        ]);
     }
 
     public function getByNombre(string $nombre)
     {
-        return $this->coloniaService->getByNombre($nombre);
+        return response()->json([
+            'success' => true,
+            'message' => 'Colonias obtenidas exitosamente',
+            'data' => $this->coloniaService->getByNombre($nombre)
+        ]);
     }
 
     public function getByCiudadId(int $ciudadId)
     {
-        return $this->coloniaService->getByCiudadId($ciudadId);
+        return response()->json([
+            'success' => true,
+            'message' => 'Colonias obtenidas exitosamente',
+            'data' => $this->coloniaService->getByCiudadId($ciudadId)
+        ]);
     }
 
-    public function create(Request $request)
+    public function create(CreateColoniaRequest $request)
     {
-        // Validar los datos de entrada
-        $validatedData = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'ciudadId' => 'required|integer'
-        ]);
-
         // Crear la nueva colonia
-        $newColonia = $this->coloniaService->create($validatedData);
+        $newColonia = $this->coloniaService->create($request->validated());
 
-        return response()->json($newColonia, 201);
+        return response()->json([
+            'success' => true,
+            'message' => 'Colonia creada exitosamente',
+            'data' => $newColonia
+        ], 201);
     }
 
-    public function update(int $id, Request $request)
+    public function update(int $id, UpdateColoniaRequest $request)
     {
-        // Validar los datos de entrada
-        $validatedData = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'ciudadId' => 'required|integer'
-        ]);
-
         // Actualizar la colonia existente
-        $updatedColonia = $this->coloniaService->update($id, $validatedData);
+        $updatedColonia = $this->coloniaService->update($id, $request->validated());
 
         if (!$updatedColonia) {
-            return response()->json(['message' => 'No se encontró la colonia para actualizar'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró la colonia para actualizar'
+            ], 404);
         }
 
-        return response()->json($updatedColonia);
+        return response()->json([
+            'success' => true,
+            'message' => 'Colonia actualizada exitosamente',
+            'data' => $updatedColonia
+        ]);
     }
 
     public function delete(int $id)
@@ -80,10 +104,16 @@ class ColoniaController extends Controller
         $deleted = $this->coloniaService->delete($id);
 
         if (!$deleted) {
-            return response()->json(['message' => 'No se encontró la colonia para eliminar'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró la colonia para eliminar'
+            ], 404);
         }
 
-        return response()->json(['message' => 'Colonia eliminada exitosamente']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Colonia eliminada exitosamente'
+        ]);
     }
 
 }

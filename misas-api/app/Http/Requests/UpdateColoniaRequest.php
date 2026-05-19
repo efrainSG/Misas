@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateColoniaRequest extends FormRequest
 {
@@ -23,7 +24,13 @@ class UpdateColoniaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nombre' => 'required|string|max:100',
+            'nombre' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::unique('Colonias', 'Nombre')
+                    ->ignore($this->route('id')),
+            ],
             'ciudadid' => 'required|integer|exists:Ciudades,Id',
         ];
     }

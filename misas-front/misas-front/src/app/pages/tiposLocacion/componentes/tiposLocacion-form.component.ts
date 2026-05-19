@@ -1,8 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
-
 import { TipoLocacionService } from "../../../services/tipo-locacion-service";
+import { ApiResponse } from "../../../interfaces/ApiResponse";
 
 @Component({
     selector: 'app-tipos-locacion-form-component',
@@ -37,8 +37,6 @@ export class TiposLocacionFormComponent implements OnInit {
     }
 
     guardar() {
-        console.log('Guardando tipo de locación:', this.form.value);
-        console.log('Tipo de locación actual:', this.tipoLocacion);
         if (this.tipoLocacion?.Id) {
             this.actualizar();
         } else {
@@ -71,11 +69,13 @@ export class TiposLocacionFormComponent implements OnInit {
                 descripcion: this.form.value.Descripcion
             };
             this.service.update(this.tipoLocacion.Id, updatedTipoLocacion).subscribe({
-                next: () => {
+                next: (response: ApiResponse<any>) => {
+                    alert(response.message);
                     this.onCreated.emit();
                     this.form.reset();
                 },
                 error: (err) => {
+                    console.error('Error al actualizar tipo de locación:', err);
                 }
             });
         }

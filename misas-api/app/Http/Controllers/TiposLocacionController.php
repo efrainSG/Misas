@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\TipoLocacionService;
+use App\Http\Requests\CreateTipoLocacionRequest;
+use App\Http\Requests\UpdateTipoLocacionRequest;
 
 class TiposLocacionController extends Controller
 {
@@ -16,62 +18,67 @@ class TiposLocacionController extends Controller
 
     public function getAll()
     {
-        return $this->tipoLocacionService->getAll();
+        return response()->json([
+            'success' => true,
+            'message' => 'Tipos de locación obtenidos exitosamente',
+            'data' => $this->tipoLocacionService->getAll()
+        ]);
     }
 
     public function getById(int $id)
     {
         $data = $this->tipoLocacionService->getById($id);
         if (!$data) {
-            return response()->json(['message' => 'No se encontraron tipos de locación con ese ID'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontraron tipos de locación con ese ID'
+            ], 404);
         }
-        return $data;
+        return response()->json([
+            'success' => true,
+            'message' => 'Tipo de locación obtenido exitosamente',
+            'data' => $data
+        ]);
     }
 
     public function getByNombre(string $nombre)
     {
         $data = $this->tipoLocacionService->getByNombre($nombre);
-        return $data;
+        return response()->json([
+            'success' => true,
+            'message' => 'Tipo de locación obtenido exitosamente',
+            'data' => $data
+        ]);
     }
 
-    public function create(Request $request)
+    public function create(CreateTipoLocacionRequest $request)
     {
-        // Validar los datos de entrada
-        $validatedData = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'descripcion' => 'nullable|string|max:255'
-        ]);
+        $newTipoLocacion = $this->tipoLocacionService->create($request->validated());
 
-        // Crear el nuevo tipo de locación
-        $newTipoLocacion = $this->tipoLocacionService->create($validatedData);
-
-        if ($newTipoLocacion instanceof \Illuminate\Http\JsonResponse) {
-            return $newTipoLocacion; // Retorna el error de validación si existe
-        }
-
-        return response()->json($newTipoLocacion, 201);
+        return response()->json([
+            'success' => true,
+            'message' => 'Tipo de locación creado exitosamente',
+            'data' => $newTipoLocacion
+        ], 201);
     }
 
-    public function update(int $id, Request $request)
+    public function update(int $id, UpdateTipoLocacionRequest $request)
     {
-        if ($id != $request->input('id')) {
-            return response()->json(['message' => 'El ID en la ruta no coincide con el ID en el cuerpo de la solicitud'], 400);
-        }
-
-        // Validar los datos de entrada
-        $validatedData = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'descripcion' => 'nullable|string|max:255'
-        ]);
-
         // Actualizar el tipo de locación existente
-        $updatedTipoLocacion = $this->tipoLocacionService->update($id, $validatedData);
+        $updatedTipoLocacion = $this->tipoLocacionService->update($id, $request->validated());
 
         if (!$updatedTipoLocacion) {
-            return response()->json(['message' => 'No se encontró el tipo de locación para actualizar'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró el tipo de locación para actualizar'
+            ], 404);
         }
 
-        return response()->json($updatedTipoLocacion);
+        return response()->json([
+            'success' => true,
+            'message' => 'Tipo de locación actualizado exitosamente',
+            'data' => $updatedTipoLocacion
+        ]);
     }
 
     public function delete(int $id)
@@ -79,10 +86,16 @@ class TiposLocacionController extends Controller
         $deleted = $this->tipoLocacionService->delete($id);
 
         if (!$deleted) {
-            return response()->json(['message' => 'No se encontró el tipo de locación para eliminar'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró el tipo de locación para eliminar'
+            ], 404);
         }
 
-        return response()->json(['message' => 'Tipo de locación eliminado exitosamente']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Tipo de locación eliminado exitosamente'
+        ]);
     }
 }
 ?>

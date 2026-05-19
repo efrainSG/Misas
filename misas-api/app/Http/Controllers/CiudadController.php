@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\CiudadService;
+use App\Http\Requests\CreateCiudadRequest;
+use App\Http\Requests\UpdateCiudadRequest;
 
 class CiudadController extends Controller
 {
@@ -16,59 +18,67 @@ class CiudadController extends Controller
 
     public function getAll()
     {
-        return $this->ciudadService->getAll();
+        return response()->json([
+            'success' => true,
+            'message' => 'Ciudades obtenidas exitosamente',
+            'data' => $this->ciudadService->getAll()
+        ]);
     }
 
     public function getById(int $id)
     {
         $data = $this->ciudadService->getById($id);
+
         if (!$data) {
-            return response()->json(['message' => 'No se encontraron ciudades con ese ID'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontraron ciudades con ese ID'], 404);
         }
-        return $data;
+        return response()->json([
+            'success' => true,
+            'message' => 'Ciudad obtenida exitosamente',
+            'data' => $data
+        ]);
     }
 
     public function getByNombre(string $nombre)
     {
         $data = $this->ciudadService->getByNombre($nombre);
-        return $data;
+        return response()->json([
+            'success' => true,
+            'message' => 'Ciudades obtenidas exitosamente',
+            'data' => $data
+        ]);
     }
 
-    public function create(Request $request)
+    public function create(CreateCiudadRequest $request)
     {
-        // Validar los datos de entrada
-        $validatedData = $request->validate([
-            'nombre' => 'required|string|max:100'
-        ]);
-
         // Crear la nueva ciudad
-        $newCiudad = $this->ciudadService->create($validatedData);
+        $newCiudad = $this->ciudadService->create($request->validated());
 
-        if ($newCiudad instanceof \Illuminate\Http\JsonResponse) {
-            return $newCiudad; // Retorna el error de validación si existe
-        }
-        return response()->json($newCiudad, 201);
+        return response()->json([
+            'success' => true,
+            'message' => 'Ciudad creada exitosamente',
+            'data' => $newCiudad
+        ], 201);
     }
 
-    public function update(int $id, Request $request)
+    public function update(int $id, UpdateCiudadRequest $request)
     {
-        if ($id != $request->input('id')) {
-            return response()->json(['message' => 'El ID en la ruta no coincide con el ID en el cuerpo de la solicitud'], 400);
-        }
-        
-        // Validar los datos de entrada
-        $validatedData = $request->validate([
-            'nombre' => 'required|string|max:100'
-        ]);
-
-        // Actualizar la ciudad existente
-        $updatedCiudad = $this->ciudadService->update($id, $validatedData);
+        $updatedCiudad = $this->ciudadService->update($id, $request->validated());
 
         if (!$updatedCiudad) {
-            return response()->json(['message' => 'No se encontró la ciudad para actualizar'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró la ciudad para actualizar'
+            ], 404);
         }
 
-        return response()->json($updatedCiudad);
+        return response()->json([
+            'success' => true,
+            'message' => 'Ciudad actualizada exitosamente',
+            'data' => $updatedCiudad
+        ]);
     }
 
     public function delete(int $id)
@@ -76,9 +86,14 @@ class CiudadController extends Controller
         $deleted = $this->ciudadService->delete($id);
 
         if (!$deleted) {
-            return response()->json(['message' => 'No se encontró la ciudad para eliminar'], 404);
-
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró la ciudad para eliminar'
+            ], 404);
         }
-        return response()->json(['message' => 'Ciudad eliminada exitosamente']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Ciudad eliminada exitosamente'
+        ]);
     }
 }

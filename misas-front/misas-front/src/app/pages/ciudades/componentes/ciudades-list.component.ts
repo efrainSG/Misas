@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
 import { CiudadService } from "../../../services/ciudad-service";
+import { ApiResponse } from "../../../interfaces/ApiResponse";
 
 @Component({
     selector: 'app-ciudades-list-component',
@@ -30,11 +31,12 @@ export class CiudadesListComponent implements OnInit, OnChanges {
 
     cargar() {
         this.servicio.getAll().subscribe({
-            next: (data) => {
-                this.ciudades = data;
+            next: (response: ApiResponse<any[]>) => {
+                this.ciudades = response.data;
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             },
             error: (err) => {
+                console.error('Error al cargar las ciudades', err);
             }
         });
     }
@@ -42,11 +44,12 @@ export class CiudadesListComponent implements OnInit, OnChanges {
     eliminar(id: number) {
         if (confirm('¿Está seguro de que desea eliminar esta ciudad?')) {
             this.servicio.delete(id).subscribe({
-                next: () => {
-                    alert('Ciudad eliminada exitosamente');
+                next: (response: ApiResponse<any>) => {
+                    alert(response.message);
                     this.cargar(); // Recargar la lista después de eliminar
                 },
                 error: (err) => {
+                    console.error('Error al eliminar la ciudad', err);
                     alert('Error al eliminar la ciudad');
                 }
             });

@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
 import { ColoniaService } from "../../../services/colonia-service";
+import { ApiResponse } from "../../../interfaces/ApiResponse";
 
 @Component({
     selector: 'app-colonias-list-component',
@@ -30,11 +31,12 @@ export class ColoniasListComponent implements OnInit, OnChanges {
     
     cargar() {
         this.servicio.getAllDescriptive().subscribe({
-            next: (data) => {
-                this.colonias = data;
+            next: (response: ApiResponse<any[]>) => {
+                this.colonias = response.data;
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             },
             error: (err) => {
+                console.error('Error al cargar las colonias:', err);
             }
         });
     }
@@ -42,11 +44,12 @@ export class ColoniasListComponent implements OnInit, OnChanges {
     eliminar(id: number) {
         if (confirm('¿Estás seguro de que deseas eliminar esta colonia?')) {
             this.servicio.delete(id).subscribe({
-                next: () => {
-                    alert('Colonia eliminada exitosamente');
+                next: (response: ApiResponse<any>) => {
+                    alert(response.message);
                     this.cargar(); // Recargar la lista después de eliminar
                 },
                 error: (err) => {
+                    console.error('Error al eliminar la colonia:', err);
                     alert('Error al eliminar la colonia');
                 }
             });
