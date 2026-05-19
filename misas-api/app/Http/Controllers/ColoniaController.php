@@ -52,7 +52,7 @@ class ColoniaController extends Controller
         ]);
 
         // Crear la nueva colonia
-        $newColonia = $this->coloniaService->createColonia($validatedData);
+        $newColonia = $this->coloniaService->create($validatedData);
 
         return response()->json($newColonia, 201);
     }
@@ -66,7 +66,7 @@ class ColoniaController extends Controller
         ]);
 
         // Actualizar la colonia existente
-        $updatedColonia = $this->coloniaService->updateColonia($id, $validatedData);
+        $updatedColonia = $this->coloniaService->update($id, $validatedData);
 
         if (!$updatedColonia) {
             return response()->json(['message' => 'No se encontró la colonia para actualizar'], 404);
@@ -77,7 +77,7 @@ class ColoniaController extends Controller
 
     public function delete(int $id)
     {
-        $deleted = $this->coloniaService->deleteColonia($id);
+        $deleted = $this->coloniaService->delete($id);
 
         if (!$deleted) {
             return response()->json(['message' => 'No se encontró la colonia para eliminar'], 404);

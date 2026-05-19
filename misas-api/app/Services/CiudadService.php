@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
 
 class CiudadService {
-        public function getAll()
+
+    public function getAll()
     {
         $ciudades = DB::table('Ciudades')
             ->select('Id', 'Nombre')
@@ -34,7 +34,7 @@ class CiudadService {
         return $ciudad;
     }
 
-    public function createCiudad(array $data)
+    public function create(array $data)
     {
         $ciudadId = DB::table('Ciudades')->insertGetId([
             'Nombre' => $data['nombre'],
@@ -43,21 +43,32 @@ class CiudadService {
         return $this->getById($ciudadId);
     }
 
-    public function updateCiudad(int $id, array $data)
+    public function update(int $id, array $data)
     {
-        $updated = DB::table('Ciudades')
+        $exists = DB::table('Ciudades')
+            ->where('Id', $id)
+            ->exists();
+
+        if (!$exists) {
+            return null;
+        }
+
+        DB::table('Ciudades')
             ->where('Id', $id)
             ->update(['Nombre' => $data['nombre']]);
 
-        if ($updated) {
             return $this->getById($id);
-        } else {
-            return response()->json(['message' => 'Ciudad no encontrada'], 404);
-        }
     }
 
-    public function deleteCiudad(int $id)
+    public function delete(int $id)
     {
+        $allowDelete = DB::table('Colonias')
+            ->where('CiudadId', $id)
+            ->count() === 0;
+        if (!$allowDelete) {
+            return response()->json(['message' => 'No se puede eliminar la ciudad porque hay colonias asociadas'], 400);
+        }
+
         $deleted = DB::table('Ciudades')
             ->where('Id', $id)
             ->delete();

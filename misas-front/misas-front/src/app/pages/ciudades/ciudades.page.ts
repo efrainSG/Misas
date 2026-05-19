@@ -16,9 +16,15 @@ import { CiudadesListComponent } from "./componentes/ciudades-list.component";
 export class CiudadesPage {
     refreshFlag = false;
 
+    ciudadSeleccionada: any | null = null;
+
     constructor(private servicio: CiudadService) {}
 
     recargar() {
         this.refreshFlag = !this.refreshFlag;
+    }
+
+    editarCiudad(ciudad: any) {
+        this.ciudadSeleccionada = ciudad;
     }
 }

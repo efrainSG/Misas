@@ -15,8 +15,14 @@ import { HorariosListComponent } from "./componentes/horarios-list.component";
 export class HorariosPage {
     refreshFlag = false;
 
+    horarioSeleccionado: any | null = null;
+
     constructor(private servicio: HorarioService) {}
     recargar() {
         this.refreshFlag = !this.refreshFlag;
+    }
+
+    editarHorario(horario: any) {
+        this.horarioSeleccionado = horario;
     }
 }

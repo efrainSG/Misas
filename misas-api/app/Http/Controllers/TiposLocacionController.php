@@ -43,7 +43,7 @@ class TiposLocacionController extends Controller
         ]);
 
         // Crear el nuevo tipo de locación
-        $newTipoLocacion = $this->tipoLocacionService->createTipoLocacion($validatedData);
+        $newTipoLocacion = $this->tipoLocacionService->create($validatedData);
 
         if ($newTipoLocacion instanceof \Illuminate\Http\JsonResponse) {
             return $newTipoLocacion; // Retorna el error de validación si existe
@@ -65,7 +65,7 @@ class TiposLocacionController extends Controller
         ]);
 
         // Actualizar el tipo de locación existente
-        $updatedTipoLocacion = $this->tipoLocacionService->updateTipoLocacion($id, $validatedData);
+        $updatedTipoLocacion = $this->tipoLocacionService->update($id, $validatedData);
 
         if (!$updatedTipoLocacion) {
             return response()->json(['message' => 'No se encontró el tipo de locación para actualizar'], 404);
@@ -76,7 +76,7 @@ class TiposLocacionController extends Controller
 
     public function delete(int $id)
     {
-        $deleted = $this->tipoLocacionService->deleteTipoLocacion($id);
+        $deleted = $this->tipoLocacionService->delete($id);
 
         if (!$deleted) {
             return response()->json(['message' => 'No se encontró el tipo de locación para eliminar'], 404);

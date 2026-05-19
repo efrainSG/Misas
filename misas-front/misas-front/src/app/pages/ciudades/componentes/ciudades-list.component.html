@@ -16,8 +16,8 @@
             <tr *ngFor="let ciudad of ciudades">
                 <td class="fw-semibold">{{ ciudad.Nombre }}</td>
                 <td>
-                  <button class="btn btn-sm btn-outline-primary">Editar</button>
-                  <button class="btn btn-sm btn-outline-danger" (click)="eliminar(ciudad.Id)">Eliminar</button>
+                  <button class="btn btn-sm btn-outline-primary" (click)="editarCiudad(ciudad)"><i class="bi bi-pencil"></i> Editar</button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="eliminar(ciudad.Id)"><i class="bi bi-trash"></i> Eliminar</button>
                 </td>
             </tr>
             </tbody>

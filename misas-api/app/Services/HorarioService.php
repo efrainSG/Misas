@@ -64,7 +64,7 @@ class HorarioService {
         return $horarios;
     }
 
-    public function createHorario(array $data)
+    public function create(array $data)
     {
         $id = DB::table('Horarios')->insertGetId([
             'LocacionId' => $data['locacionId'],
@@ -77,7 +77,7 @@ class HorarioService {
         return $this->getById($id);
     }
 
-    public function updateHorario(int $id, array $data)
+    public function update(int $id, array $data)
     {
         $updated = DB::table('Horarios')
             ->where('Id', $id)
@@ -96,7 +96,7 @@ class HorarioService {
         }
     }
 
-    public function deleteHorario(int $id)
+    public function delete(int $id)
     {
         $deleted = DB::table('Horarios')
             ->where('Id', $id)

@@ -24,12 +24,8 @@
                 <td>{{ horario.Activo }}</td>
                 <td>{{ horario.Notas }}</td>
                 <td>
-                    <button class="btn btn-sm btn-outline-primary me-2">
-                        <i class="bi bi-pencil"></i> Editar
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger" (click)="eliminar(horario.Id)">
-                        <i class="bi bi-trash"></i> Eliminar
-                    </button>
+                    <button class="btn btn-sm btn-outline-primary me-2" (click)="editarHorario(horario)"><i class="bi bi-pencil"></i> Editar</button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="eliminar(horario.Id)"><i class="bi bi-trash"></i> Eliminar</button>
                 </td>
             </tr>
             </tbody>

@@ -16,9 +16,15 @@ import { LocationService } from "../../services/locationService";
 export class Locacionespage {
     refreshFlag = false;
 
+    locacionSeleccionada: any | null = null;
+
     constructor(private servicio: LocationService) {}
     
     recargar() {
         this.refreshFlag = !this.refreshFlag;
+    }
+    
+    editarLocacion(locacion: any) {
+        this.locacionSeleccionada = locacion;
     }
 }

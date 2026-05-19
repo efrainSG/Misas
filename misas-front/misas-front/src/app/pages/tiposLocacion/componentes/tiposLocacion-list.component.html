@@ -18,8 +18,8 @@
             <td class="fw-semibold">{{ tipoLocacion.Nombre }}</td>
             <td>{{ tipoLocacion.Descripcion }}</td>
             <td>
-              <button class="btn btn-sm btn-outline-primary">Editar</button>
-              <button class="btn btn-sm btn-outline-danger" (click)="eliminar(tipoLocacion.Id)">Eliminar</button>
+              <button class="btn btn-sm btn-outline-primary" (click)="editarTipoLocacion(tipoLocacion)"><i class="bi bi-pencil"></i> Editar</button>
+              <button class="btn btn-sm btn-outline-danger" (click)="eliminar(tipoLocacion.Id)"><i class="bi bi-trash"></i> Eliminar</button>
             </td>
           </tr>
         </tbody>

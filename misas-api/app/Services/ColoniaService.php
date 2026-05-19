@@ -56,7 +56,7 @@ class ColoniaService
         return $colonias;
     }
 
-    public function createColonia(array $data)
+    public function create(array $data)
     {
             $coloniaId = DB::table('Colonias')->insertGetId([
             'Nombre' => $data['nombre'],
@@ -66,7 +66,7 @@ class ColoniaService
         return $this->getById($coloniaId);
     }
 
-    public function updateColonia(int $id, array $data)
+    public function update(int $id, array $data)
     {
         $updateData = [];
         if (isset($data['nombre'])) {
@@ -91,7 +91,7 @@ class ColoniaService
         }
     }
 
-    public function deleteColonia(int $id)
+    public function delete(int $id)
     {
         $deleted = DB::table('Colonias')
             ->where('Id', $id)

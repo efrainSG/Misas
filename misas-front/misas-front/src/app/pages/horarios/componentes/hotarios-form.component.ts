@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { TipoLocacionService } from "../../../services/tipo-locacion-service";
 import { LocationService } from "../../../services/locationService";
@@ -16,7 +16,9 @@ import { HorarioService } from "../../../services/horarioService";
 })
 
 export class HorariosFormComponent implements OnInit{
+    @Input() horario: any | null = null;
     @Output() onCreated = new EventEmitter<void>();
+
     tiposLocacion: any[] = [];
     ciudades: any[] = [];
     colonias: any[] = [];
@@ -59,7 +61,6 @@ export class HorariosFormComponent implements OnInit{
 
         this.form.get('CiudadId')?.valueChanges.subscribe(ciudadId => {
             this.locaciones = [];
-            console.log('Ciudad seleccionada:', ciudadId);
             this.form.patchValue({
                 ColoniaId: null,
                 LocacionId: null
@@ -82,14 +83,10 @@ export class HorariosFormComponent implements OnInit{
         });
 
         this.form.get('TipoLocacionId')?.valueChanges.subscribe((tipoLocacionId) => {
-        console.info("TipoLocacionId", tipoLocacionId);
-        console.info("ColoniaId", this.form.value.ColoniaId);
             this.cargarLocaciones(tipoLocacionId, this.form.value.ColoniaId);
         });
 
         this.form.get('ColoniaId')?.valueChanges.subscribe((coloniaId) => {
-        console.info("TipoLocacionId", this.form.value.TipoLocacionId);
-        console.info("ColoniaId", coloniaId);
             this.cargarLocaciones(this.form.value.TipoLocacionId, coloniaId);
         });
     }
@@ -125,6 +122,15 @@ export class HorariosFormComponent implements OnInit{
             });
     }
 
+    guardar() {
+        if (this.horario?.Id) {
+            this.actualizar();
+        } else {
+            this.crear();
+        }
+        this.horario = null; // Limpiar el formulario después de guardar
+    }
+
     crear() {
         // Lógica para crear un nuevo tipo de locación
         if (this.form.invalid) return;
@@ -146,9 +152,29 @@ export class HorariosFormComponent implements OnInit{
                 this.form.reset(); // Limpiar el formulario después de crear
             },
             error: (err) => {
-                console.error('Error al crear horario', err);
             }
         });
+    }
 
+    actualizar() {
+        if (this.form.valid && this.horario?.Id) {
+            const updatedHorario = {
+                id: this.horario.Id,
+                diaSemana: this.form.value.DiaSemana,
+                hora: this.form.value.Hora,
+                activo: this.form.value.Activo,
+                locacionId: this.form.value.LocacionId,
+                notas: this.form.value.Notas,
+                tipoLocacionId: this.form.value.TipoLocacionId
+            };
+            this.horarioService.update(this.horario.Id, updatedHorario).subscribe({
+                next: () => {
+                    this.onCreated.emit();
+                    this.form.reset();
+                },
+                error: (err) => {
+                }
+            });
+        }
     }
 }

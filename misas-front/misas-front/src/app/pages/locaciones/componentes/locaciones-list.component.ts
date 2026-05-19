@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
 import { LocationService } from "../../../services/locationService";
 
 @Component({
@@ -13,6 +13,7 @@ import { LocationService } from "../../../services/locationService";
 export class LocacionesListComponent implements OnChanges, OnInit {
     locaciones: any;
     @Input() refreshFlag: boolean = false;
+    @Output() editar = new EventEmitter<any>();
     
     constructor(
         private servicio: LocationService,
@@ -34,7 +35,6 @@ export class LocacionesListComponent implements OnChanges, OnInit {
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             },
             error: (err) => {
-                console.error('Error al cargar locaciones', err);
             }
         });
     }
@@ -47,10 +47,13 @@ export class LocacionesListComponent implements OnChanges, OnInit {
                     this.cargar(); // Recargar la lista después de eliminar
                 },
                 error: (err) => {
-                    console.error('Error al eliminar locación', err);
                     alert('Error al eliminar la locación');
                 }
             });
         }
+    }
+
+    editarLocacion(locacion: any) {
+        this.editar.emit(locacion);
     }
 }

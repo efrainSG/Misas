@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { HorarioService } from "../../../services/horarioService";
 
@@ -12,6 +12,7 @@ import { HorarioService } from "../../../services/horarioService";
 export class HorariosListComponent implements OnInit , OnChanges{
     horarios: any;
     @Input() refreshFlag: boolean = false;
+    @Output() editar = new EventEmitter<any>();
 
     constructor(
         private servicio: HorarioService,
@@ -36,7 +37,6 @@ export class HorariosListComponent implements OnInit , OnChanges{
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             },
             error: (err) => {
-                console.error('Error al cargar horarios', err);
             }
         });
     }
@@ -54,10 +54,13 @@ export class HorariosListComponent implements OnInit , OnChanges{
                     this.cargar(); // Recargar la lista después de eliminar
                 },
                 error: (err) => {
-                    console.error('Error al eliminar horario', err);
                     alert('Error al eliminar el horario');
                 }
             });
         }
+    }
+
+    editarHorario(horario: any) {
+        this.editar.emit(horario);
     }
 }

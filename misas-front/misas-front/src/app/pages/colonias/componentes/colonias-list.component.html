@@ -18,12 +18,8 @@
                 <td class="fw-semibold">{{ colonia.Nombre }}</td>
                 <td>{{ colonia.CiudadNombre }}</td>
                 <td>
-                    <button class="btn btn-sm btn-outline-primary">
-                        Editar
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger" (click)="eliminar(colonia.Id)">
-                        Eliminar
-                    </button>
+                    <button class="btn btn-sm btn-outline-primary" (click)="editarColonia(colonia)"><i class="bi bi-pencil"></i> Editar</button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="eliminar(colonia.Id)"><i class="bi bi-trash"></i> Eliminar</button>
                 </td>
             </tr>
             </tbody>

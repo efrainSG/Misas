@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { ReactiveFormsModule, FormBuilder, FormGroup } from "@angular/forms";
 
 import { CiudadService } from "../../../services/ciudad-service";
@@ -14,6 +14,7 @@ import { ColoniaService } from "../../../services/colonia-service";
 })
 
 export class ColoniasFormComponent implements OnInit {
+    @Input() colonia: any | null = null;
     @Output() onCreated = new EventEmitter<void>();
 
     ciudades: any[] = [];
@@ -36,6 +37,21 @@ export class ColoniasFormComponent implements OnInit {
         this.cargarCiudades();
     }
 
+    ngOnChanges() {
+        if (this.colonia) {
+            this.form.patchValue(this.colonia);
+        }
+    }
+
+    guardar() {
+        if (this.colonia?.Id) {
+            this.actualizar();
+        } else {
+            this.crear();
+        }
+        this.colonia = null; // Limpiar el formulario después de guardar
+    }
+
     cargarCiudades() {
         this.ciudadService.getAll().subscribe({
             next: (data) => {
@@ -43,7 +59,6 @@ export class ColoniasFormComponent implements OnInit {
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             },
             error: (err) => {
-                console.error('Error al cargar ciudades', err);
             }
         });
     }
@@ -64,8 +79,25 @@ export class ColoniasFormComponent implements OnInit {
 
             },
             error: (err) => {
-                console.error('Error al crear colonia', err);
             }
         });
+    }
+
+    actualizar() {
+        if (this.form.valid && this.colonia?.Id) {
+            const updatedColonia = {
+                id: this.colonia.Id,
+                nombre: this.form.value.Nombre,
+                ciudadId: this.form.value.CiudadId
+            };
+            this.coloniaService.update(this.colonia.Id, updatedColonia).subscribe({
+                next: () => {
+                    this.onCreated.emit();
+                    this.form.reset();
+                },
+                error: (err) => {
+                }
+            });
+        }
     }
 }

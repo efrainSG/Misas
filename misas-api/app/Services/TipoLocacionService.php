@@ -34,7 +34,7 @@ class TipoLocacionService {
         return $tipoLocacion;
     }
 
-    public function createTipoLocacion(array $data)
+    public function create(array $data)
     {
         $exists = DB::table('TipoLocaciones')
             ->where('Nombre', $data['nombre'])
@@ -43,7 +43,7 @@ class TipoLocacionService {
         if ($exists) {
             return response()->json(['message' => 'Ya existe un tipo de locación con ese nombre'], 400);
         }
-        
+
         $tipoLocacionId = DB::table('TipoLocaciones')->insertGetId([
             'Nombre' => $data['nombre'],
             'Descripcion' => $data['descripcion'] ?? null
@@ -52,7 +52,7 @@ class TipoLocacionService {
         return $this->getById($tipoLocacionId);
     }
 
-    public function updateTipoLocacion(int $id, array $data)
+    public function update(int $id, array $data)
     {
         $exists = DB::table('TipoLocaciones')
         ->where('Id', $id)
@@ -68,11 +68,11 @@ class TipoLocacionService {
             'Nombre' => $data['nombre'],
             'Descripcion' => $data['descripcion'] ?? null
         ]);
-
+        
         return $this->getById($id);
     }
 
-    public function deleteTipoLocacion(int $id)
+    public function delete(int $id)
     {
         $allowDelete = DB::table('Locaciones')
             ->where('TipoLocacionId', $id)

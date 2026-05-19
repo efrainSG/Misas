@@ -1,5 +1,4 @@
 <h2>Colonias</h2>
 
-    <app-colonias-form-component (onCreated)="recargar()"></app-colonias-form-component>
-
-    <app-colonias-list-component [refreshFlag]="refreshFlag"></app-colonias-list-component>
+<app-colonias-form-component (onCreated)="recargar()" [colonia]="coloniaSeleccionada"></app-colonias-form-component>
+<app-colonias-list-component [refreshFlag]="refreshFlag" (editar)="editarColonia($event)"></app-colonias-list-component>

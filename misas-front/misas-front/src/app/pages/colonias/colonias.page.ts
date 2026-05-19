@@ -16,9 +16,15 @@ import { ColoniaService } from "../../services/colonia-service";
 export class ColoniasPage {
     refreshFlag = false;
 
+    coloniaSeleccionada: any | null = null;
+
     constructor(private servicio: ColoniaService) {}
 
     recargar() {
         this.refreshFlag = !this.refreshFlag;
+    }
+
+    editarColonia(colonia: any) {
+        this.coloniaSeleccionada = colonia;
     }
 }

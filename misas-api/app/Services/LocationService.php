@@ -94,8 +94,16 @@ class LocationService {
         return $horarios;
     }
 
-    public function createLocation(array $data)
+    public function create(array $data)
     {
+        $exists = DB::table('Locaciones')
+            ->where('Nombre', $data['nombre'])
+            ->exists();
+        
+        if ($exists) {
+            return response()->json(['message' => 'Ya existe una locación con ese nombre'], 400);
+        }
+        
         $id = DB::table('Locaciones')->insertGetId([
             'Nombre' => $data['nombre'],
             'Direccion' => $data['direccion'],
@@ -107,9 +115,17 @@ class LocationService {
         return $this->getById($id);
     }
 
-    public function updateLocation(int $id, array $data)
+    public function update(int $id, array $data)
     {
-        $updated = DB::table('Locaciones')
+        $exists = DB::table('TipoLocaciones')
+        ->where('Id', $id)
+        ->exists();
+
+        if (!$exists) {
+            return null;
+        }
+        
+        DB::table('Locaciones')
             ->where('Id', $id)
             ->update([
                 'Nombre' => $data['Nombre'],
@@ -118,16 +134,19 @@ class LocationService {
                 'Telefono' => $data['Telefono'] ?? null,
                 'TipoLocacionId' => $data['TipoLocacionId']
             ]);
-
-        if ($updated) {
-            return response()->json(['message' => 'Locación actualizada']);
-        } else {
-            return response()->json(['message' => 'Locación no encontrada'], 404);
-        }
+        
+        return $this->getById($id);
     }
 
-    public function deleteLocation(int $id)
+    public function delete(int $id)
     {
+        $allowDelete = DB::table('Horarios')
+            ->where('LocacionId', $id)
+            ->count() === 0;
+        if (!$allowDelete) {
+            return response()->json(['message' => 'No se puede eliminar la locación porque hay horarios asociados'], 400);
+        }
+
         $deleted = DB::table('Locaciones')
             ->where('Id', $id)
             ->delete();

@@ -60,7 +60,7 @@ class HorarioController extends Controller
         ]);
 
         // Crear el nuevo horario
-            $newHorario = $this->horarioService->createHorario($validatedData);
+            $newHorario = $this->horarioService->create($validatedData);
 
         return response()->json($newHorario, 201);
     }
@@ -77,7 +77,7 @@ class HorarioController extends Controller
         ]);
 
         // Actualizar el horario existente
-        $updatedHorario = $this->horarioService->updateHorario($id, $validatedData);
+        $updatedHorario = $this->horarioService->update($id, $validatedData);
 
         if (!$updatedHorario) {
             return response()->json(['message' => 'No se encontró el horario para actualizar'], 404);
@@ -88,7 +88,7 @@ class HorarioController extends Controller
 
     public function delete(int $id)
     {
-        $deleted = $this->horarioService->deleteHorario($id);
+        $deleted = $this->horarioService->delete($id);
 
         if (!$deleted) {
             return response()->json(['message' => 'No se encontró el horario para eliminar'], 404);

@@ -16,9 +16,15 @@ import { TiposLocacionFormComponent } from "./componentes/tiposLocacion-form.com
 export class TiposLocacionPage {
     refreshFlag = false;
 
+    tipoLocacionSeleccionado: any | null = null;
+
     constructor(private servicio: TipoLocacionService) {}
 
     recargar() {
         this.refreshFlag = !this.refreshFlag;
+    }
+
+    editarTipoLocacion(tipoLocacion: any) {
+        this.tipoLocacionSeleccionado = tipoLocacion;
     }
 }

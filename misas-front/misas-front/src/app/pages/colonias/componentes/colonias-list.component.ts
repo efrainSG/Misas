@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
 import { ColoniaService } from "../../../services/colonia-service";
 
 @Component({
@@ -13,6 +13,7 @@ import { ColoniaService } from "../../../services/colonia-service";
 export class ColoniasListComponent implements OnInit, OnChanges {
     colonias: any;
     @Input() refreshFlag: boolean = false;
+    @Output() editar = new EventEmitter<any>();
 
     constructor(
         private servicio: ColoniaService,
@@ -34,7 +35,6 @@ export class ColoniasListComponent implements OnInit, OnChanges {
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             },
             error: (err) => {
-                console.error('Error al cargar colonias', err);
             }
         });
     }
@@ -47,10 +47,13 @@ export class ColoniasListComponent implements OnInit, OnChanges {
                     this.cargar(); // Recargar la lista después de eliminar
                 },
                 error: (err) => {
-                    console.error('Error al eliminar colonia', err);
                     alert('Error al eliminar la colonia');
                 }
             });
         }
+    }
+
+    editarColonia(colonia: any) {
+        this.editar.emit(colonia);
     }
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
 import { TipoLocacionService } from "../../../services/tipo-locacion-service";
 
 @Component({
@@ -13,6 +13,7 @@ import { TipoLocacionService } from "../../../services/tipo-locacion-service";
 export class TiposLocacionListComponent implements OnInit, OnChanges {
     tiposLocacion: any;
     @Input() refreshFlag: boolean = false;
+    @Output() editar = new EventEmitter<any>();
 
     constructor(
         private servicio: TipoLocacionService,
@@ -34,7 +35,6 @@ export class TiposLocacionListComponent implements OnInit, OnChanges {
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             },
             error: (err) => {
-                console.error('Error al cargar tipos de locación', err);
             }
         });
     }
@@ -47,12 +47,13 @@ export class TiposLocacionListComponent implements OnInit, OnChanges {
                     this.cargar(); // Recargar la lista después de eliminar
                 },
                 error: (err) => {
-                    console.error('Error al eliminar tipo de locación', err);
                     alert('Error al eliminar el tipo de locación');
                 }
             });
         }
-    }
+    }   
 
-    
+    editarTipoLocacion(tipoLocacion: any) {
+        this.editar.emit(tipoLocacion);
+    }
 }

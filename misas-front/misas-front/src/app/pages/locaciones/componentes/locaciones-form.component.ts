@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { ReactiveFormsModule, FormBuilder, FormGroup } from "@angular/forms";
 
 import { LocationService } from "../../../services/locationService";
@@ -16,6 +16,7 @@ import { TipoLocacionService } from "../../../services/tipo-locacion-service";
 })
 
 export class LocacionesFormComponent implements OnInit {
+    @Input() locacion: any | null = null;
     @Output() onCreated = new EventEmitter<void>();
 
     ciudades: any[] = [];
@@ -62,12 +63,17 @@ export class LocacionesFormComponent implements OnInit {
                     }, 800);
                 },
                 error: (err) => {
-                    console.error('Error al cargar colonias', err);
                     this.cargandoColonias = false;
                 }
             });
         }
         });
+    }
+
+    ngOnChanges() {
+        if (this.locacion) {
+            this.form.patchValue(this.locacion);
+        }
     }
 
     cargarCatalogos() {
@@ -84,6 +90,15 @@ export class LocacionesFormComponent implements OnInit {
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             }
         });
+    }
+
+    guardar() {
+        if (this.locacion?.Id) {
+            this.actualizar();
+        } else {
+            this.crear();
+        }
+        this.locacion = null; // Limpiar el formulario después de guardar
     }
 
     crear() {
@@ -107,8 +122,29 @@ export class LocacionesFormComponent implements OnInit {
                 this.ciudades = []; // Clear ciudades when a new location is created
             },
             error: (err) => {
-                console.error('Error al crear locación', err);
             }
         });
+    }
+
+    actualizar() {
+        if (this.form.valid && this.locacion?.Id) {
+            const updatedFormValue = {
+                id: this.locacion.Id,
+                coloniaId: this.form.value.ColoniaId, // Asegurar que coloniaId se envíe como null si no se selecciona
+                tipoLocacionId: this.form.value.TipoLocacionId,
+                ciudadId: this.form.value.CiudadId,
+                nombre: this.form.value.Nombre,
+                direccion: this.form.value.Direccion,
+                telefono: this.form.value.Telefono
+            };
+            this.service.update(this.locacion.Id, updatedFormValue).subscribe({
+                next: () => {
+                    this.onCreated.emit();
+                    this.form.reset();
+                },
+                error: (err) => {
+                }
+            });
+        }
     }
 }
