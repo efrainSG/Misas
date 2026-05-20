@@ -6,6 +6,7 @@ import { LocationService } from "../../../services/locationService";
 import { CiudadService } from "../../../services/ciudad-service";
 import { ColoniaService } from "../../../services/colonia-service";
 import { TipoLocacionService } from "../../../services/tipo-locacion-service";
+import { ApiResponse } from "../../../interfaces/ApiResponse";
 
 @Component({
     selector: 'app-locaciones-form-component',
@@ -52,8 +53,8 @@ export class LocacionesFormComponent implements OnInit {
         if (ciudadId) {
             this.cargandoColonias = true;
             this.coloniaService.getByCiudad(ciudadId).subscribe({
-                next: (colonias) => {
-                    this.colonias = colonias;
+                next: (response: ApiResponse<any[]>) => {
+                    this.colonias = response.data;
                     this.form.patchValue({ ColoniaId: null }); // Reset colonia selection when ciudad changes
                     this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
                     this.coloniaHighlight = true;
@@ -63,6 +64,7 @@ export class LocacionesFormComponent implements OnInit {
                     }, 800);
                 },
                 error: (err) => {
+                    console.error('Error al cargar las colonias', err);
                     this.cargandoColonias = false;
                 }
             });
@@ -78,15 +80,15 @@ export class LocacionesFormComponent implements OnInit {
 
     cargarCatalogos() {
         this.ciudadService.getAll().subscribe({
-            next: (ciudades) => {
-                this.ciudades = ciudades;
+            next: (response: ApiResponse<any[]>) => {
+                this.ciudades = response.data;
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             }
         });
 
         this.tipoLocacionService.getAll().subscribe({
-            next: (tipos) => {
-                this.tiposLocacion = tipos;
+            next: (response: ApiResponse<any[]>) => {
+                this.tiposLocacion = response.data;
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             }
         });
@@ -105,23 +107,26 @@ export class LocacionesFormComponent implements OnInit {
         if (this.form.invalid) return;
 
         const newFormValue = {
-            coloniaId: this.form.value.ColoniaId, // Asegurar que coloniaId se envíe como null si no se selecciona
-            tipoLocacionId: this.form.value.TipoLocacionId,
-            ciudadId: this.form.value.CiudadId,
+            coloniaid: this.form.value.ColoniaId, // Asegurar que coloniaId se envíe como null si no se selecciona
+            tipolocacionid: this.form.value.TipoLocacionId,
+            ciudadid: this.form.value.CiudadId,
             nombre: this.form.value.Nombre,
             direccion: this.form.value.Direccion,
             telefono: this.form.value.Telefono
         };
 
         this.service.create(newFormValue).subscribe({
-            next: () => {
+            next: (response: ApiResponse<any>) => {
                 this.onCreated.emit();
                 this.form.reset({
                     TipoLocacionId: null
                 });
-                this.ciudades = []; // Clear ciudades when a new location is created
+                this.colonias = []; // Clear colonias when a new location is created
+                alert(response.message);
             },
             error: (err) => {
+                console.error('Error al crear la locación:', err);
+                alert('Error al crear la locación');
             }
         });
     }
@@ -130,19 +135,23 @@ export class LocacionesFormComponent implements OnInit {
         if (this.form.valid && this.locacion?.Id) {
             const updatedFormValue = {
                 id: this.locacion.Id,
-                coloniaId: this.form.value.ColoniaId, // Asegurar que coloniaId se envíe como null si no se selecciona
-                tipoLocacionId: this.form.value.TipoLocacionId,
-                ciudadId: this.form.value.CiudadId,
+                coloniaid: this.form.value.ColoniaId, // Asegurar que coloniaId se envíe como null si no se selecciona
+                tipolocacionid: this.form.value.TipoLocacionId,
+                ciudadid: this.form.value.CiudadId,
                 nombre: this.form.value.Nombre,
                 direccion: this.form.value.Direccion,
                 telefono: this.form.value.Telefono
             };
             this.service.update(this.locacion.Id, updatedFormValue).subscribe({
-                next: () => {
+                next: (response: ApiResponse<any>) => {
                     this.onCreated.emit();
                     this.form.reset();
+                    this.colonias = []; // Clear colonias when a new location is created
+                    alert(response.message);
                 },
                 error: (err) => {
+                    console.error('Error al actualizar la locación:', err);
+                    alert('Error al actualizar la locación');
                 }
             });
         }

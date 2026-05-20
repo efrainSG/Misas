@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\LocationService;
+use App\Http\Requests\CreateLocacionRequest;
+use App\Http\Requests\UpdateLocacionRequest;
 
 class LocacionController extends Controller
 {
@@ -16,118 +18,143 @@ class LocacionController extends Controller
 
     public function getAll()
     {
-        return $this->locationService->getAll();
+        return response()->json([
+            'success' => true,
+            'message' => 'Locaciones obtenidas exitosamente',
+            'data' => $this->locationService->getAll()
+        ]);
     }
 
     public function getAllDescriptive()
     {
-        return $this->locationService->getAllDescriptive();
+        return response()->json([
+            'success' => true,
+            'message' => 'Locaciones obtenidas exitosamente',
+            'data' => $this->locationService->getAllDescriptive()
+        ]);
     }
 
     public function getById(int $id)
     {
         $data = $this->locationService->getById($id);
         if (!$data) {
-            return response()->json(['message' => 'No se encontraron locaciones con ese ID'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontraron locaciones con ese ID'
+            ], 404);
         }
-        return $data;
+        return response()->json([
+            'success' => true,
+            'message' => 'Locación obtenida exitosamente',
+            'data' => $data
+        ]);
     }
 
     public function getByTipoLocacionId(int $tipoLocacionId)
     {
-        return $this->locationService->getByTipoLocacionId($tipoLocacionId);
+        return response()->json([
+            'success' => true,
+            'message' => 'Locaciones obtenidas exitosamente',
+            'data' => $this->locationService->getByTipoLocacionId($tipoLocacionId)
+        ]);
     }
 
     public function getByColoniaId(int $coloniaId)
     {
         $data = $this->locationService->getByColoniaId($coloniaId);
-        return $data;
+        return response()->json([
+            'success' => true,
+            'message' => 'Locaciones obtenidas exitosamente',
+            'data' => $data
+        ]);
     }
 
     public function getByNombre(string $nombre)
     {
         $data = $this->locationService->getByNombre($nombre);
-        return $data;
+        return response()->json([
+            'success' => true,
+            'message' => 'Locaciones obtenidas exitosamente',
+            'data' => $data
+        ]);
     }
 
     public function getByTipoAndColonia(int $tipoLocacionId, int $coloniaId)
     {
         $data = $this->locationService->getByTipoAndColonia($tipoLocacionId, $coloniaId);
-        return $data;
+        return response()->json([
+            'success' => true,
+            'message' => 'Locaciones obtenidas exitosamente',
+            'data' => $data
+        ]);
     }
 
     public function getHorariosByLocacionId(int $locacionId)
     {
         $locacion = $this->locationService->getById($locacionId);
         if (!$locacion) {
-            return response()->json(['message' => 'No se encontró la locación con ese ID'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró la locación con ese ID'
+            ], 404);
         }
 
         $data = $this->locationService->getHorariosByLocacionId($locacionId);
 
         if ($data->isEmpty()) {
-            return response()->json(['message' => 'No se encontraron horarios para esta locación'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontraron horarios para esta locación'
+            ], 404);
         }
 
         return response()->json([
-            'locacion' => $data[0]->LocacionNombre,
-            'horarios' => $data->map(function ($item) {
-                return [
-                    'diaSemana' => $item->DiaSemana,
-                    'hora' => $item->Hora,
-                    'notas' => $item->Notas
-                ];
-            })
+            'success' => true,
+            'message' => 'Horarios obtenidos exitosamente',
+            'data' => [
+                'locacion' => $data[0]->LocacionNombre,
+                'horarios' => $data->map(function ($item) {
+                    return [
+                        'diaSemana' => $item->DiaSemana,
+                        'hora' => $item->Hora,
+                        'notas' => $item->Notas
+                    ];
+                })
+            ]
         ]);
     }
 
-    public function create(Request $request)
+    public function create(CreateLocacionRequest $request)
     {
-        // Validar los datos de entrada
-        $validatedData = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'direccion' => 'required|string|max:500',
-            'tipoLocacionId' => 'required|integer',
-            'coloniaId' => 'required|integer',
-            'telefono' => 'nullable|string|max:20'
-        ]);
-
         // Crear la nueva locación
-        $newLocacion = $this->locationService->create($validatedData);
+        $newLocacion = $this->locationService->create($request->validated());
 
-        return response()->json($newLocacion, 201);
+        return response()->json([
+            'success' => true,
+            'message' => 'Locación creada exitosamente',
+            'data' => $newLocacion
+        ], 201);
     }
 
-    public function update(int $id, Request $request)
+    public function update(int $id, UpdateLocacionRequest $request)
     {
-        // Validar los datos de entrada
-        $validatedData = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'direccion' => 'required|string|max:500',
-            'tipoLocacionId' => 'required|integer',
-            'coloniaId' => 'required|integer',
-            'telefono' => 'nullable|string|max:20'
-        ]);
-
         // Actualizar la locación existente
-        $updatedLocacion = $this->locationService->update($id, $validatedData);
+        $updatedLocacion = $this->locationService->update($id, $request->validated());
 
-        if (!$updatedLocacion) {
-            return response()->json(['message' => 'No se encontró la locación para actualizar'], 404);
-        }
-
-        return response()->json($updatedLocacion);
+        return response()->json([
+            'success' => $updatedLocacion['success'],
+            'message' => $updatedLocacion['message'],
+            'data' => $updatedLocacion['data'] ?? null
+        ], $updatedLocacion['status'] ?? 200);
     }
 
     public function delete(int $id)
     {
         $deleted = $this->locationService->delete($id);
 
-        if (!$deleted) {
-            return response()->json(['message' => 'No se encontró la locación para eliminar'], 404);
-        }
-
-        return response()->json(['message' => 'Locación eliminada exitosamente']);
+        return response()->json([
+            'success' => $deleted['success'],
+            'message' => $deleted['message']
+        ], $deleted['status'] ?? 404);
     }
 }
-?>

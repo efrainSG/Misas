@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ApiResponse } from '../interfaces/ApiResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -10,46 +11,46 @@ export class LocationService {
   constructor(private http: HttpClient) {}
 
   getAll() {
-    return this.http.get<any[]>(this.apiURL);
+    return this.http.get<ApiResponse<any[]>>(this.apiURL);
   }
 
   getAllDescriptive() {
-    return this.http.get<any[]>(`${this.apiURL}/descriptivas`);
+    return this.http.get<ApiResponse<any[]>>(`${this.apiURL}/descriptivas`);
   }
   
   getById(id: number) {
-    return this.http.get<any>(`${this.apiURL}/${id}`);
+    return this.http.get<ApiResponse<any>>(`${this.apiURL}/${id}`);
   }
 
   getByNombre(nombre: string) {
-    return this.http.get<any[]>(`${this.apiURL}/nombre/${nombre}`);
+    return this.http.get<ApiResponse<any[]>>(`${this.apiURL}/nombre/${nombre}`);
   }
 
   getByColonia(coloniaId: number) {
-    return this.http.get<any[]>(`${this.apiURL}/byColonia/${coloniaId}`);
+    return this.http.get<ApiResponse<any[]>>(`${this.apiURL}/byColonia/${coloniaId}`);
   }
 
   getByTipo(tipoLocacionId: number) {
-    return this.http.get<any[]>(`${this.apiURL}/byTipo/${tipoLocacionId}`);
+    return this.http.get<ApiResponse<any[]>>(`${this.apiURL}/byTipo/${tipoLocacionId}`);
   }
 
   getHorariosByLocacionId(locacionId: number) {
-    return this.http.get<any[]>(`${this.apiURL}/${locacionId}/horarios`);
+    return this.http.get<ApiResponse<any[]>>(`${this.apiURL}/${locacionId}/horarios`);
   }
 
   getByTipoAndColonia(tipoLocacionId: number, coloniaId: number) {
-    return this.http.get<any[]>(`${this.apiURL}/byTipoAndColonia/${tipoLocacionId}/${coloniaId}`);
+    return this.http.get<ApiResponse<any[]>>(`${this.apiURL}/byTipoAndColonia/${tipoLocacionId}/${coloniaId}`);
   }
 
   create(location: any) {
-    return this.http.post(this.apiURL, location);
+    return this.http.post<ApiResponse<any>>(this.apiURL, location);
   }
 
   update(id: number, location: any) {
-    return this.http.put(`${this.apiURL}/${id}`, location);
+    return this.http.put<ApiResponse<any>>(`${this.apiURL}/${id}`, location);
   }
 
   delete(id: number) {
-    return this.http.delete(`${this.apiURL}/${id}`);
+    return this.http.delete<ApiResponse<any>>(`${this.apiURL}/${id}`);
   }
 }

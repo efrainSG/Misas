@@ -101,15 +101,19 @@ class LocationService {
             ->exists();
         
         if ($exists) {
-            return response()->json(['message' => 'Ya existe una locación con ese nombre'], 400);
+            return [
+                'message' => 'Ya existe una locación con ese nombre',
+                'success' => false,
+                'status' => 400
+            ];
         }
         
         $id = DB::table('Locaciones')->insertGetId([
             'Nombre' => $data['nombre'],
             'Direccion' => $data['direccion'],
-            'ColoniaId' => $data['coloniaId'],
+            'ColoniaId' => $data['coloniaid'],
             'Telefono' => $data['telefono'] ?? null,
-            'TipoLocacionId' => $data['tipoLocacionId']
+            'TipoLocacionId' => $data['tipolocacionid']
         ]);
 
         return $this->getById($id);
@@ -122,20 +126,29 @@ class LocationService {
         ->exists();
 
         if (!$exists) {
-            return null;
+            return [
+                'message' => 'Locación no encontrada',
+                'success' => false,
+                'status' => 404
+            ];
         }
         
         DB::table('Locaciones')
             ->where('Id', $id)
             ->update([
-                'Nombre' => $data['Nombre'],
-                'Direccion' => $data['Direccion'],
-                'ColoniaId' => $data['ColoniaId'],
-                'Telefono' => $data['Telefono'] ?? null,
-                'TipoLocacionId' => $data['TipoLocacionId']
+                'Nombre' => $data['nombre'],
+                'Direccion' => $data['direccion'],
+                'ColoniaId' => $data['coloniaid'],
+                'Telefono' => $data['telefono'] ?? null,
+                'TipoLocacionId' => $data['tipolocacionid']
             ]);
         
-        return $this->getById($id);
+        return [
+            'message' => 'Locación actualizada',
+            'success' => true,
+            'data' => $this->getById($id),
+            'status' => 200
+        ];
     }
 
     public function delete(int $id)
@@ -144,7 +157,11 @@ class LocationService {
             ->where('LocacionId', $id)
             ->count() === 0;
         if (!$allowDelete) {
-            return response()->json(['message' => 'No se puede eliminar la locación porque hay horarios asociados'], 400);
+            return [
+                'message' => 'No se puede eliminar la locación porque hay horarios asociados',
+                'success' => false,
+                'status' => 400
+            ];
         }
 
         $deleted = DB::table('Locaciones')
@@ -152,9 +169,17 @@ class LocationService {
             ->delete();
 
         if ($deleted) {
-            return response()->json(['message' => 'Locación eliminada']);
+            return [
+                'message' => 'Locación eliminada',
+                'success' => true,
+                'status' => 200
+            ];
         } else {
-            return response()->json(['message' => 'Locación no encontrada'], 404);
+            return [
+                'message' => 'Locación no encontrada',
+                'success' => false,
+                'status' => 404
+            ];
         }
     }
 }

@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
 import { LocationService } from "../../../services/locationService";
+import { ApiResponse } from "../../../interfaces/ApiResponse";
 
 @Component({
     selector: 'app-locaciones-list-component',
@@ -30,11 +31,12 @@ export class LocacionesListComponent implements OnChanges, OnInit {
 
     cargar() {
         this.servicio.getAllDescriptive().subscribe({
-            next: (data) => {
-                this.locaciones = data;
+            next: (response: ApiResponse<any[]>) => {
+                this.locaciones = response.data;
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             },
             error: (err) => {
+                console.error('Error al cargar las locaciones:', err);
             }
         });
     }
@@ -42,11 +44,12 @@ export class LocacionesListComponent implements OnChanges, OnInit {
     eliminar(id: number) {
         if (confirm('¿Estás seguro de que deseas eliminar esta locación?')) {
             this.servicio.delete(id).subscribe({
-                next: () => {
-                    alert('Locación eliminada exitosamente');
+                next: (response: ApiResponse<any>) => {
+                    alert(response.message);
                     this.cargar(); // Recargar la lista después de eliminar
                 },
                 error: (err) => {
+                    console.error('Error al eliminar la locación:', err);
                     alert('Error al eliminar la locación');
                 }
             });

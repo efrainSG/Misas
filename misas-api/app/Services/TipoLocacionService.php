@@ -41,7 +41,11 @@ class TipoLocacionService {
             ->exists();
         
         if ($exists) {
-            return response()->json(['message' => 'Ya existe un tipo de locación con ese nombre'], 400);
+            return [
+                'message' => 'Ya existe un tipo de locación con ese nombre',
+                'success' => false,
+                'status' => 400
+            ];
         }
 
         $tipoLocacionId = DB::table('TipoLocaciones')->insertGetId([
@@ -59,7 +63,11 @@ class TipoLocacionService {
         ->exists();
 
         if (!$exists) {
-            return null;
+            return [
+                'message' => 'No se encontró el tipo de locación para actualizar',
+                'success' => false,
+                'status' => 404
+            ];
         }
         
         DB::table('TipoLocaciones')
@@ -69,7 +77,12 @@ class TipoLocacionService {
             'Descripcion' => $data['descripcion'] ?? null
         ]);
         
-        return $this->getById($id);
+        return [
+            'message' => 'Tipo de locación actualizado',
+            'success' => true,
+            'data' => $this->getById($id),
+            'status' => 200
+        ];
     }
 
     public function delete(int $id)
@@ -78,7 +91,11 @@ class TipoLocacionService {
             ->where('TipoLocacionId', $id)
             ->count() === 0;
         if (!$allowDelete) {
-            return response()->json(['message' => 'No se puede eliminar el tipo de locación porque hay locaciones asociadas'], 400);
+            return [
+                'message' => 'No se puede eliminar el tipo de locación porque hay locaciones asociadas',
+                'success' => false,
+                'status' => 400
+            ];
         }
 
         $deleted = DB::table('TipoLocaciones')
@@ -86,9 +103,17 @@ class TipoLocacionService {
             ->delete();
 
         if ($deleted) {
-            return response()->json(['message' => 'Tipo de locación eliminado']);
+            return [
+                'message' => 'Tipo de locación eliminado',
+                'success' => true,
+                'status' => 200
+            ];
         } else {
-            return response()->json(['message' => 'Tipo de locación no encontrado'], 404);
+            return [
+                'message' => 'Tipo de locación no encontrado',
+                'success' => false,
+                'status' => 404
+            ];
         }
     }
 }

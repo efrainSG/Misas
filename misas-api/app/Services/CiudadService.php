@@ -50,14 +50,31 @@ class CiudadService {
             ->exists();
 
         if (!$exists) {
-            return null;
+            return [
+                'message' => 'Ciudad no encontrada',
+                'success' => false,
+                'status' => 404
+            ];
         }
 
-        DB::table('Ciudades')
+        $updated = DB::table('Ciudades')
             ->where('Id', $id)
             ->update(['Nombre' => $data['nombre']]);
 
-            return $this->getById($id);
+        if($updated) {
+            return [
+                'message' => 'Ciudad actualizada',
+                'success' => true,
+                'data' => $this->getById($id),
+                'status' => 200
+            ];
+        } else {
+            return [
+                'message' => 'Ciudad no encontrada',
+                'success' => false,
+                'status' => 404
+            ];
+        }
     }
 
     public function delete(int $id)
@@ -66,7 +83,11 @@ class CiudadService {
             ->where('CiudadId', $id)
             ->count() === 0;
         if (!$allowDelete) {
-            return response()->json(['message' => 'No se puede eliminar la ciudad porque hay colonias asociadas'], 400);
+            return [
+                'message' => 'No se puede eliminar la ciudad porque hay colonias asociadas',
+                'success' => false,
+                'status' => 400
+            ];
         }
 
         $deleted = DB::table('Ciudades')
@@ -74,9 +95,17 @@ class CiudadService {
             ->delete();
 
         if ($deleted) {
-            return response()->json(['message' => 'Ciudad eliminada exitosamente']);
+            return [
+                'message' => 'Ciudad eliminada exitosamente',
+                'success' => true,
+                'status' => 200
+            ];
         } else {
-            return response()->json(['message' => 'Ciudad no encontrada'], 404);
+            return [
+                'message' => 'Ciudad no encontrada',
+                'success' => false,
+                'status' => 404
+            ];
         }
     }
 }

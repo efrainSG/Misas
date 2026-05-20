@@ -90,9 +90,18 @@ class HorarioService {
             ]);
 
         if ($updated) {
-            return response()->json(['message' => 'Horario actualizado']);
+            return [
+                'message' => 'Horario actualizado',
+                'success' => true,
+                'data' => $this->getById($id),
+                'status' => 200
+            ];
         } else {
-            return response()->json(['message' => 'Horario no encontrado'], 404);
+            return [
+                'message' => 'Horario no encontrado',
+                'success' => false,
+                'status' => 404
+            ];
         }
     }
 
@@ -103,9 +112,17 @@ class HorarioService {
             ->delete();
 
         if ($deleted) {
-            return response()->json(['message' => 'Horario eliminado']);
+            return [
+                'message' => 'Horario eliminado',
+                'success' => true,
+                'status' => 200
+            ];
         } else {
-            return response()->json(['message' => 'Horario no encontrado'], 404);
+            return [
+                'message' => 'Horario no encontrado',
+                'success' => false,
+                'status' => 404
+            ];
         }
     }
 }

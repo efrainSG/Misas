@@ -85,36 +85,21 @@ class ColoniaController extends Controller
         // Actualizar la colonia existente
         $updatedColonia = $this->coloniaService->update($id, $request->validated());
 
-        if (!$updatedColonia) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se encontró la colonia para actualizar'
-            ], 404);
-        }
-
         return response()->json([
-            'success' => true,
-            'message' => 'Colonia actualizada exitosamente',
-            'data' => $updatedColonia
-        ]);
+            'success' => $updatedColonia['success'],
+            'message' => $updatedColonia['message'],
+            'data' => $updatedColonia['data'] ?? null
+        ], $updatedColonia['status'] ?? 200);
     }
 
     public function delete(int $id)
     {
         $deleted = $this->coloniaService->delete($id);
 
-        if (!$deleted) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se encontró la colonia para eliminar'
-            ], 404);
-        }
-
         return response()->json([
-            'success' => true,
-            'message' => 'Colonia eliminada exitosamente'
-        ]);
+            'success' => $deleted['success'],
+            'message' => $deleted['message']
+        ], $deleted['status'] ?? 200);
     }
-
 }
 ?>

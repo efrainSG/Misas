@@ -67,35 +67,21 @@ class TiposLocacionController extends Controller
         // Actualizar el tipo de locación existente
         $updatedTipoLocacion = $this->tipoLocacionService->update($id, $request->validated());
 
-        if (!$updatedTipoLocacion) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se encontró el tipo de locación para actualizar'
-            ], 404);
-        }
-
         return response()->json([
-            'success' => true,
-            'message' => 'Tipo de locación actualizado exitosamente',
-            'data' => $updatedTipoLocacion
-        ]);
+            'success' => $updatedTipoLocacion['success'],
+            'message' => $updatedTipoLocacion['message'],
+            'data' => $updatedTipoLocacion['data'] ?? null
+        ], $updatedTipoLocacion['status'] ?? 200);
     }
 
     public function delete(int $id)
     {
         $deleted = $this->tipoLocacionService->delete($id);
 
-        if (!$deleted) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se encontró el tipo de locación para eliminar'
-            ], 404);
-        }
-
         return response()->json([
-            'success' => true,
-            'message' => 'Tipo de locación eliminado exitosamente'
-        ]);
+            'success' => $deleted['success'],
+            'message' => $deleted['message']
+        ], $deleted['status'] ?? 404);
     }
 }
 ?>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\HorarioService;
+use App\Http\Requests\CreateHorarioRequest;
+use App\Http\Requests\UpdateHorarioRequest;
 
 class HorarioController extends Controller
 {
@@ -16,84 +18,96 @@ class HorarioController extends Controller
 
     public function getAll()
     {
-        return $this->horarioService->getAll();
+        return response()->json([
+            'success' => true,
+            'message' => 'Horarios obtenidos exitosamente',
+            'data' => $this->horarioService->getAll()
+        ]);
     }
 
     public function getById(int $id)
     {
         $data = $this->horarioService->getById($id);
         if (!$data) {
-            return response()->json(['message' => 'No se encontraron horarios con ese ID'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontraron horarios con ese ID'
+            ], 404);
         }
-        return $data;
+        return response()->json([
+            'success' => true,
+            'message' => 'Horario obtenido exitosamente',
+            'data' => $data
+        ]);
     }
 
     public function getByDiaSemana(string $diaSemana)
     {
-        return $this->horarioService->getByDiaSemana($diaSemana);
+        return response()->json([
+            'success' => true,
+            'message' => 'Horarios obtenidos exitosamente',
+            'data' => $this->horarioService->getByDiaSemana($diaSemana)
+        ]);
     }
 
     public function getByActivo(bool $activo)
     {
-        return $this->horarioService->getByActivo($activo);
+        return response()->json([
+            'success' => true,
+            'message' => 'Horarios obtenidos exitosamente',
+            'data' => $this->horarioService->getByActivo($activo)
+        ]);
     }
 
     public function getByHora(string $hora)
     {
-        return $this->horarioService->getByHora($hora);
+        return response()->json([
+            'success' => true,
+            'message' => 'Horarios obtenidos exitosamente',
+            'data' => $this->horarioService->getByHora($hora)
+        ]);
     }
 
     public function getByLocacionId(int $locacionId)
     {
-        return $this->horarioService->getByLocacionId($locacionId);
+        return response()->json([
+            'success' => true,
+            'message' => 'Horarios obtenidos exitosamente',
+            'data' => $this->horarioService->getByLocacionId($locacionId)
+        ]);
     }
 
-    public function create(Request $request)
+    public function create(CreateHorarioRequest $request)
     {
-        // Validar los datos de entrada
-        $validatedData = $request->validate([
-            'diaSemana' => 'required|integer',
-            'locacionId' => 'required|integer',
-            'hora' => 'required|string|max:10',
-            'activo' => 'required|boolean',
-            'notas' => 'nullable|string|max:500'
-        ]);
-
         // Crear el nuevo horario
             $newHorario = $this->horarioService->create($validatedData);
 
-        return response()->json($newHorario, 201);
+        return response()->json([
+            'success' => true,
+            'message' => 'Horario creado exitosamente',
+            'data' => $newHorario
+        ], 201);
     }
 
-    public function update(int $id, Request $request)
+    public function update(int $id, UpdateHorarioRequest $request)
     {
-        // Validar los datos de entrada
-        $validatedData = $request->validate([
-            'diaSemana' => 'required|integer',
-            'locacionId' => 'required|integer',
-            'hora' => 'required|string|max:10',
-            'activo' => 'required|boolean',
-            'notas' => 'nullable|string|max:500'
-        ]);
-
         // Actualizar el horario existente
-        $updatedHorario = $this->horarioService->update($id, $validatedData);
+        $updatedHorario = $this->horarioService->update($id, $request->validated());
 
-        if (!$updatedHorario) {
-            return response()->json(['message' => 'No se encontró el horario para actualizar'], 404);
-        }
-
-        return response()->json($updatedHorario);
+        return response()->json([
+            'success' => $updatedHorario['success'],
+            'message' => $updatedHorario['message'],
+            'data' => $updatedHorario['data'] ?? null
+        ], $updatedHorario['status'] ?? 200);
     }
 
     public function delete(int $id)
     {
         $deleted = $this->horarioService->delete($id);
 
-        if (!$deleted) {
-            return response()->json(['message' => 'No se encontró el horario para eliminar'], 404);
-        }
-
-        return response()->json(['message' => 'Horario eliminado exitosamente']);
+        return response()->json([
+            'success' => $deleted['success'],
+            'message' => $deleted['message']
+        ], $deleted['status'] ?? 200);
     }
 }

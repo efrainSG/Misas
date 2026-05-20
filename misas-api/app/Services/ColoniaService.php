@@ -77,7 +77,11 @@ class ColoniaService
         }
 
         if (empty($updateData)) {
-            return response()->json(['message' => 'No se proporcionaron datos para actualizar'], 400);
+            return [
+                'message' => 'No se proporcionaron datos para actualizar',
+                'success' => false,
+                'status' => 400
+            ];
         }
 
         $updated = DB::table('Colonias')
@@ -85,9 +89,18 @@ class ColoniaService
             ->update($updateData);
 
         if ($updated) {
-            return response()->json(['message' => 'Colonia actualizada']);
+            return [
+                'message' => 'Colonia actualizada',
+                'success' => true,
+                'data' => $this->getById($id),
+                'status' => 200
+            ];
         } else {
-            return response()->json(['message' => 'Colonia no encontrada o sin cambios'], 404);
+            return [
+                'message' => 'Colonia no encontrada o sin cambios',
+                'success' => false,
+                'status' => 404
+            ]   ;
         }
     }
 
@@ -98,9 +111,17 @@ class ColoniaService
             ->delete();
 
         if ($deleted) {
-            return response()->json(['message' => 'Colonia eliminada']);
+            return [
+                'message' => 'Colonia eliminada',
+                'success' => true,
+                'status' => 200
+            ];
         } else {
-            return response()->json(['message' => 'Colonia no encontrada'], 404);
+            return [
+                'message' => 'Colonia no encontrada',
+                'success' => false,
+                'status' => 404
+            ];
         }
     }
 }

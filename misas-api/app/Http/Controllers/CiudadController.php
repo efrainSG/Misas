@@ -67,33 +67,20 @@ class CiudadController extends Controller
     {
         $updatedCiudad = $this->ciudadService->update($id, $request->validated());
 
-        if (!$updatedCiudad) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se encontró la ciudad para actualizar'
-            ], 404);
-        }
-
         return response()->json([
-            'success' => true,
-            'message' => 'Ciudad actualizada exitosamente',
-            'data' => $updatedCiudad
-        ]);
+            'success' => $updatedCiudad['success'],
+            'message' => $updatedCiudad['message'],
+            'data' => $updatedCiudad['data'] ?? null
+        ], $updatedCiudad['status'] ?? 200);
     }
 
     public function delete(int $id)
     {
         $deleted = $this->ciudadService->delete($id);
 
-        if (!$deleted) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se encontró la ciudad para eliminar'
-            ], 404);
-        }
         return response()->json([
-            'success' => true,
-            'message' => 'Ciudad eliminada exitosamente'
-        ]);
+            'success' => $deleted['success'],
+            'message' => $deleted['message']
+        ], $deleted['status'] ?? 200);
     }
 }
