@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { HorarioService } from "../../../services/horarioService";
+import { ApiResponse } from "../../../interfaces/ApiResponse";
 
 @Component({
     selector: 'app-horarios-list-component',
@@ -29,14 +30,15 @@ export class HorariosListComponent implements OnInit , OnChanges{
 
     cargar() {
         this.servicio.getAll().subscribe({
-            next: (data) => {
-                this.horarios = data;
+            next: (response: ApiResponse<any[]>) => {
+                this.horarios = response.data;
                 for (let horario of this.horarios) {
                     horario.DiaSemanaNombre = this.getDiaSemanaNombre(horario.DiaSemana);
                 }
                 this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             },
             error: (err) => {
+                console.error('Error al cargar los horarios:', err);
             }
         });
     }
@@ -49,11 +51,12 @@ export class HorariosListComponent implements OnInit , OnChanges{
     eliminar(id: number) {
         if (confirm('¿Está seguro de que desea eliminar este horario?')) {
             this.servicio.delete(id).subscribe({
-                next: () => {
-                    alert('Horario eliminado exitosamente');
+                next: (response: ApiResponse<any>) => {
+                    alert(response.message);
                     this.cargar(); // Recargar la lista después de eliminar
                 },
                 error: (err) => {
+                    console.error('Error al eliminar el horario:', err);
                     alert('Error al eliminar el horario');
                 }
             });

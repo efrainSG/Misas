@@ -1,11 +1,12 @@
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { TipoLocacionService } from "../../../services/tipo-locacion-service";
 import { LocationService } from "../../../services/locationService";
 import { ColoniaService } from "../../../services/colonia-service";
 import { CiudadService } from "../../../services/ciudad-service";
 import { HorarioService } from "../../../services/horarioService";
+import { ApiResponse } from "../../../interfaces/ApiResponse";
 
 @Component({
     selector: 'app-horarios-form-component',
@@ -15,7 +16,7 @@ import { HorarioService } from "../../../services/horarioService";
     imports: [CommonModule, ReactiveFormsModule]
 })
 
-export class HorariosFormComponent implements OnInit{
+export class HorariosFormComponent implements OnInit, OnChanges{
     @Input() horario: any | null = null;
     @Output() onCreated = new EventEmitter<void>();
 
@@ -23,6 +24,11 @@ export class HorariosFormComponent implements OnInit{
     ciudades: any[] = [];
     colonias: any[] = [];
     locaciones: any[] = [];
+
+    locacionIdSeleccionada: number | null = null;
+    coloniaIdSeleccionada: number | null = null;
+    ciudadIdSeleccionada: number | null = null;
+
     diasSemana = [
         { Id: 0, Nombre: 'Domingo' },
         { Id: 1, Nombre: 'Lunes' },
@@ -42,7 +48,8 @@ export class HorariosFormComponent implements OnInit{
         private ciudadService: CiudadService,
         private coloniaService: ColoniaService,
         private locationService: LocationService,
-        private formBuilder: FormBuilder
+        private formBuilder: FormBuilder,
+        private cdr: ChangeDetectorRef
     ) {}
 
     ngOnInit() {
@@ -59,65 +66,91 @@ export class HorariosFormComponent implements OnInit{
 
         this.cargarCatalogos();
 
-        this.form.get('CiudadId')?.valueChanges.subscribe(ciudadId => {
-            this.locaciones = [];
-            this.form.patchValue({
-                ColoniaId: null,
-                LocacionId: null
-            });
+        console.info('Formulario de horarios inicializado');
+    }
 
-            if (!ciudadId) {
-                this.colonias = [];
-                return;
+    ngOnChanges(changes: SimpleChanges) {
+        console.info('Cambios detectados en HorariosFormComponent:', changes); 
+        if (changes['horario'] && this.horario) {
+            console.info('Horario recibido para edición:', this.horario);
+            this.cargarHorarioParaEdicion();
+        } 
+    }
+
+    cargarHorarioParaEdicion() {
+        this.horarioService.getById(this.horario.Id).subscribe({
+            next: (horarioData: ApiResponse<any>) => {
+                console.info('Horario cargado para edición:', horarioData.data);
+                this.locationService.getById(horarioData.data.LocacionId).subscribe({
+                    next: (locacionData: ApiResponse<any>) => {
+                        console.info('Locación del horario:', locacionData.data);
+                        this.coloniaService.getById(locacionData.data.ColoniaId).subscribe({
+                            next: (coloniaData: ApiResponse<any>) => {
+                                console.info('Colonia de la locación:', coloniaData.data);
+                                this.locacionIdSeleccionada = horarioData.data.LocacionId;
+                                this.ciudadIdSeleccionada = coloniaData.data.CiudadId;
+                                this.coloniaIdSeleccionada = locacionData.data.ColoniaId;
+
+                                this.coloniaService.getByCiudad(coloniaData.data.CiudadId).subscribe({
+                                    next: (response: ApiResponse<any[]>) => {
+                                        this.colonias = response.data;
+                                        this.form.patchValue({
+                                            DiaSemana: horarioData.data.DiaSemana,
+                                            Hora: horarioData.data.Hora,
+                                            Activo: horarioData.data.Activo,
+                                            CiudadId: this.ciudadIdSeleccionada,
+                                            ColoniaId: this.coloniaIdSeleccionada,
+                                            TipoLocacionId: locacionData.data.TipoLocacionId,
+                                            Notas: horarioData.data.Notas
+                                        }, { emitEvent: false });
+                                        this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
+                                        this.cargarLocaciones(locacionData.data.TipoLocacionId, coloniaData.data.Id);
+                                        }
+                                    });
+                                }
+                        });
+                    }
+                });
             }
-
-            this.coloniaService.getByCiudad(ciudadId).subscribe({
-                next: (colonias) => {
-                    this.colonias = colonias;
-                    this.coloniaHighlight = true;
-                    setTimeout(() => {
-                        this.coloniaHighlight = false;
-                    }, 800);
-                }
-            });
-        });
-
-        this.form.get('TipoLocacionId')?.valueChanges.subscribe((tipoLocacionId) => {
-            this.cargarLocaciones(tipoLocacionId, this.form.value.ColoniaId);
-        });
-
-        this.form.get('ColoniaId')?.valueChanges.subscribe((coloniaId) => {
-            this.cargarLocaciones(this.form.value.TipoLocacionId, coloniaId);
         });
     }
 
     cargarCatalogos() {
         this.ciudadService.getAll().subscribe({
-            next: (ciudades) => {
-                this.ciudades = ciudades;
+            next: (response: ApiResponse<any[]>) => {
+                this.ciudades = response.data;
+                this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             }
         });
 
         this.tipoLocacionService.getAll().subscribe({
-            next: (tipos) => {
-                this.tiposLocacion = tipos;
+            next: (response: ApiResponse<any[]>) => {
+                this.tiposLocacion = response.data;
+                this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
             }
         });
     }
 
     cargarLocaciones(tipoLocacionId: number | null, coloniaId: number | null) {
 
+        console.info('Cargando locaciones para TipoLocacionId:', tipoLocacionId, 'y ColoniaId:', coloniaId);
         if (!tipoLocacionId || !coloniaId) {
             this.locaciones = [];
             return;
         }
 
+
+
         this.locationService
             .getByTipoAndColonia(tipoLocacionId, coloniaId)
             .subscribe({
-                next: (locaciones) => {
-                    console.info('Locaciones cargadas:', locaciones);
-                    this.locaciones = locaciones;
+                next: (response: ApiResponse<any[]>) => {
+                    console.info('Locaciones cargadas:', response.data);
+                    this.locaciones = response.data;
+
+                    this.form.patchValue({
+                        LocacionId: this.locacionIdSeleccionada
+                     }, { emitEvent: false });
                 }
             });
     }
@@ -152,6 +185,7 @@ export class HorariosFormComponent implements OnInit{
                 this.form.reset(); // Limpiar el formulario después de crear
             },
             error: (err) => {
+                console.error('Error al crear el horario:', err);
             }
         });
     }
@@ -173,6 +207,7 @@ export class HorariosFormComponent implements OnInit{
                     this.form.reset();
                 },
                 error: (err) => {
+                    console.error('Error al actualizar el horario:', err);
                 }
             });
         }
