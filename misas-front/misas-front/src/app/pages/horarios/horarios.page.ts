@@ -8,17 +8,20 @@ import { HorariosListComponent } from "./componentes/horarios-list.component";
     templateUrl: './horarios.page.html',
     styleUrl: './horarios.page.css',
     standalone: true,
-    imports: [HorariosFormComponent,
+    imports: [
+        HorariosFormComponent,
         HorariosListComponent
     ]
 })
 export class HorariosPage {
+    refreshFlag = false;
 
     horarioSeleccionado: any | null = null;
 
     constructor(private servicio: HorarioService) {}
     
     recargar() {
+        this.refreshFlag = !this.refreshFlag;
     }
 
     editarHorario(horario: any) {

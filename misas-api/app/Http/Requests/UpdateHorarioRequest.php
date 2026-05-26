@@ -26,7 +26,7 @@ class UpdateHorarioRequest extends FormRequest
         return [
             'locacionid' => 'required|integer|exists:Locaciones,Id',
             'diasemana' => 'required|integer|between:0,6',
-            'hora' => 'required|date_format:H:i',
+            'hora' => 'required',
             'activo' => 'required|boolean',
             'notas' => 'nullable|string',
         ];

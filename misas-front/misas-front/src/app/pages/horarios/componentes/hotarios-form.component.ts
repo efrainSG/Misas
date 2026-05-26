@@ -194,17 +194,20 @@ export class HorariosFormComponent implements OnInit, OnChanges{
         if (this.form.valid && this.horario?.Id) {
             const updatedHorario = {
                 id: this.horario.Id,
-                diaSemana: this.form.value.DiaSemana,
+                diasemana: this.form.value.DiaSemana,
                 hora: this.form.value.Hora,
                 activo: this.form.value.Activo,
-                locacionId: this.form.value.LocacionId,
+                locacionid: this.form.value.LocacionId,
                 notas: this.form.value.Notas,
-                tipoLocacionId: this.form.value.TipoLocacionId
+                tipolocacionid: this.form.value.TipoLocacionId
             };
+
+            console.info('Actualizando horario con datos:', updatedHorario);
+
             this.horarioService.update(this.horario.Id, updatedHorario).subscribe({
                 next: () => {
-                    this.onCreated.emit();
-                    this.form.reset();
+                    this.onCreated.emit(); // Emitir evento para indicar que se actualizó el horario
+                    this.form.reset(); // Limpiar el formulario después de actualizar
                 },
                 error: (err) => {
                     console.error('Error al actualizar el horario:', err);

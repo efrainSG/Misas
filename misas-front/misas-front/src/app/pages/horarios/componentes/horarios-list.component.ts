@@ -10,6 +10,7 @@ import { ApiResponse } from "../../../interfaces/ApiResponse";
     standalone: true,
     imports: [CommonModule]
 })
+
 export class HorariosListComponent implements OnInit , OnChanges{
     horarios: any;
     @Input() refreshFlag: boolean = false;
@@ -29,7 +30,7 @@ export class HorariosListComponent implements OnInit , OnChanges{
     }
 
     cargar() {
-        this.servicio.getAll().subscribe({
+        this.servicio.getAllDescriptive().subscribe({
             next: (response: ApiResponse<any[]>) => {
                 this.horarios = response.data;
                 for (let horario of this.horarios) {

@@ -5,10 +5,28 @@ namespace App\Services;
 use Illuminate\Support\Facades\DB;
 
 class HorarioService {
-        public function getAll()
+    public function getAll()
     {
         $horarios = DB::table('Horarios')
             ->select('Id', 'LocacionId', 'DiaSemana', 'Hora', 'Activo', 'Notas')
+            ->get();
+
+        return $horarios;
+    }
+
+    public function getAllDescriptive()
+    {
+        $horarios = DB::table('Horarios as h')
+            ->join('Locaciones as l', 'h.LocacionId', '=', 'l.Id')
+            ->select(
+                'h.Id',
+                'h.LocacionId',
+                'l.Nombre as LocacionNombre',
+                'h.DiaSemana',
+                'h.Hora',
+                'h.Activo',
+                'h.Notas'
+            )
             ->get();
 
         return $horarios;
@@ -67,8 +85,8 @@ class HorarioService {
     public function create(array $data)
     {
         $id = DB::table('Horarios')->insertGetId([
-            'LocacionId' => $data['locacionId'],
-            'DiaSemana' => $data['diaSemana'],
+            'LocacionId' => $data['locacionid'],
+            'DiaSemana' => $data['diasemana'],
             'Hora' => $data['hora'],
             'Activo' => $data['activo'],
             'Notas' => $data['notas'] ?? null
@@ -82,8 +100,8 @@ class HorarioService {
         $updated = DB::table('Horarios')
             ->where('Id', $id)
             ->update([
-                'LocacionId' => $data['locacionId'],
-                'DiaSemana' => $data['diaSemana'],
+                'LocacionId' => $data['locacionid'],
+                'DiaSemana' => $data['diasemana'],
                 'Hora' => $data['hora'],
                 'Activo' => $data['activo'],
                 'Notas' => $data['notas'] ?? null

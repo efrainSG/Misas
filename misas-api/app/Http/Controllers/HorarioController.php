@@ -25,6 +25,15 @@ class HorarioController extends Controller
         ]);
     }
 
+    public function getAllDescriptive()
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'Horarios obtenidos exitosamente',
+            'data' => $this->horarioService->getAllDescriptive()
+        ]);
+    }
+
     public function getById(int $id)
     {
         $data = $this->horarioService->getById($id);

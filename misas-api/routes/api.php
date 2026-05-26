@@ -43,6 +43,7 @@ Route::put('/colonias/{id}', [ColoniaController::class, 'update']);
 Route::delete('/colonias/{id}', [ColoniaController::class, 'delete']);
 
 Route::get('/horarios', [HorarioController::class, 'getAll']);
+Route::get('/horarios/descriptivos', [HorarioController::class, 'getAllDescriptive']);
 Route::get('/horarios/{id}', [HorarioController::class, 'getById']);
 Route::get('/horarios/hora/{hora}', [HorarioController::class, 'getByHora']);
 Route::get('/horarios/diaSemana/{diaSemana}', [HorarioController::class, 'getByDiaSemana']);

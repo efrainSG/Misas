@@ -14,6 +14,10 @@ export class HorarioService {
         return this.http.get<ApiResponse<any[]>>(this.apiURL);
     }
 
+    getAllDescriptive() {
+        return this.http.get<ApiResponse<any[]>>(`${this.apiURL}/descriptivos`);
+    }
+
     getById(id: number) {
         return this.http.get<ApiResponse<any>>(`${this.apiURL}/${id}`);
     }
@@ -39,6 +43,7 @@ export class HorarioService {
     }
 
     update(id: number, horario: any) {
+        console.info('Enviando solicitud de actualización para horario con ID:', id, 'y datos:', horario);
         return this.http.put<ApiResponse<any>>(`${this.apiURL}/${id}`, horario);
     }
 

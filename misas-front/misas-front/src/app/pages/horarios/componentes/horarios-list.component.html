@@ -19,9 +19,9 @@
             <tbody>
             <tr *ngFor="let horario of horarios">
                 <td class="fw-semibold">{{ horario.DiaSemanaNombre }}</td>
-                <td>{{ horario.LocacionId }}</td>
+                <td>{{ horario.LocacionNombre }}</td>
                 <td>{{ horario.Hora }}</td>
-                <td>{{ horario.Activo }}</td>
+                <td>{{ (horario.Activo) ? 'Sí' : 'No' }}</td>
                 <td>{{ horario.Notas }}</td>
                 <td>
                     <button class="btn btn-sm btn-outline-primary me-2" (click)="editarHorario(horario)"><i class="bi bi-pencil"></i> Editar</button>
