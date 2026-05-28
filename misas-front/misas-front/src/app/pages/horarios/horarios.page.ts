@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { HorariosFormComponent } from "./componentes/hotarios-form.component";
 import { HorarioService } from "../../services/horarioService";
 import { HorariosListComponent } from "./componentes/horarios-list.component";
+import { HorariosSearchFormComponent } from "./componentes/horarios-search-form.component";
 
 @Component({
     selector: 'app-horarios-page',
@@ -10,7 +11,8 @@ import { HorariosListComponent } from "./componentes/horarios-list.component";
     standalone: true,
     imports: [
         HorariosFormComponent,
-        HorariosListComponent
+        HorariosListComponent,
+        HorariosSearchFormComponent
     ]
 })
 export class HorariosPage {

@@ -10,9 +10,7 @@
                 <th>Día de la semana</th>
                 <th>Locación</th>
                 <th>Hora</th>
-                <th>Activo</th>
                 <th>Notas</th>
-                <th>Acciones</th>
             </tr>
             </thead>
     
@@ -21,12 +19,7 @@
                 <td class="fw-semibold">{{ horario.DiaSemanaNombre }}</td>
                 <td>{{ horario.LocacionNombre }}</td>
                 <td>{{ horario.Hora }}</td>
-                <td>{{ (horario.Activo) ? 'Sí' : 'No' }}</td>
                 <td>{{ horario.Notas }}</td>
-                <td>
-                    <button class="btn btn-sm btn-outline-primary me-2" (click)="editarHorario(horario)"><i class="bi bi-pencil"></i> Editar</button>
-                    <button class="btn btn-sm btn-outline-danger" (click)="eliminar(horario.Id)"><i class="bi bi-trash"></i> Eliminar</button>
-                </td>
             </tr>
             </tbody>
         </table>

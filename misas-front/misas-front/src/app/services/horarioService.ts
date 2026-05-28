@@ -38,6 +38,14 @@ export class HorarioService {
         return this.http.get<ApiResponse<any[]>>(`${this.apiURL}/locacion/${locacionId}`);
     }
 
+    search(hora?: string, dia?: number, ciudadId?: number) {
+        let queryParams = [];
+        if (hora) queryParams.push(`hora=${encodeURIComponent(hora)}`);
+        if (dia !== undefined) queryParams.push(`dia=${dia}`);
+        if (ciudadId !== undefined) queryParams.push(`ciudadId=${ciudadId}`);
+        return this.http.get<ApiResponse<any[]>>(`${this.apiURL}/buscar?${queryParams.join('&')}`);
+    }
+
     create(horario: any) {
         return this.http.post<ApiResponse<any>>(this.apiURL, horario);
     }
