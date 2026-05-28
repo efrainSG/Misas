@@ -86,10 +86,23 @@ class HorarioController extends Controller
         ]);
     }
 
+    public function findHorarios(Request $request)
+    {
+        $ciudadId = $request->query('ciudadid');
+        $diaSemana = $request->query('diasemana');
+        $hora = $request->query('hora');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Horarios encontrados exitosamente.',
+            'data' => $this->horarioService->findHorarios($ciudadId, $diaSemana, $hora)
+        ]);
+    }
+
     public function create(CreateHorarioRequest $request)
     {
         // Crear el nuevo horario
-            $newHorario = $this->horarioService->create($validatedData);
+            $newHorario = $this->horarioService->create($request->validated());
 
         return response()->json([
             'success' => true,

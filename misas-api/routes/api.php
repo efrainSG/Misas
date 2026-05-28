@@ -44,11 +44,14 @@ Route::delete('/colonias/{id}', [ColoniaController::class, 'delete']);
 
 Route::get('/horarios', [HorarioController::class, 'getAll']);
 Route::get('/horarios/descriptivos', [HorarioController::class, 'getAllDescriptive']);
-Route::get('/horarios/{id}', [HorarioController::class, 'getById']);
 Route::get('/horarios/hora/{hora}', [HorarioController::class, 'getByHora']);
 Route::get('/horarios/diaSemana/{diaSemana}', [HorarioController::class, 'getByDiaSemana']);
 Route::get('/horarios/activo/{activo}', [HorarioController::class, 'getByActivo']);
 Route::get('/horarios/locacion/{locacionId}', [HorarioController::class, 'getByLocacionId']);
+Route::get('/horarios/buscar', [HorarioController::class, 'findHorarios']);
+
+Route::get('/horarios/{id}', [HorarioController::class, 'getById']);
+
 Route::post('/horarios', [HorarioController::class, 'create']);
 Route::put('/horarios/{id}', [HorarioController::class, 'update']);
 Route::delete('/horarios/{id}', [HorarioController::class, 'delete']);

@@ -66,6 +66,8 @@ export class HorariosFormComponent implements OnInit, OnChanges{
 
         this.cargarCatalogos();
 
+        this.configurarListeners();
+
         console.info('Formulario de horarios inicializado');
     }
 
@@ -132,14 +134,11 @@ export class HorariosFormComponent implements OnInit, OnChanges{
     }
 
     cargarLocaciones(tipoLocacionId: number | null, coloniaId: number | null) {
-
         console.info('Cargando locaciones para TipoLocacionId:', tipoLocacionId, 'y ColoniaId:', coloniaId);
         if (!tipoLocacionId || !coloniaId) {
             this.locaciones = [];
             return;
         }
-
-
 
         this.locationService
             .getByTipoAndColonia(tipoLocacionId, coloniaId)
@@ -153,6 +152,80 @@ export class HorariosFormComponent implements OnInit, OnChanges{
                      }, { emitEvent: false });
                 }
             });
+    }
+
+    configurarListeners() {
+        this.form.get('CiudadId')?.valueChanges.subscribe(ciudadId => {
+            console.info('Ciudad seleccionada:', ciudadId);
+            this.colonias = [];
+            this.locaciones = [];
+
+            this.form.patchValue({
+                CiudadId: ciudadId,
+                // ColoniaId: null,
+            }, { emitEvent: false });
+
+            if (!ciudadId)
+                return;
+
+            this.coloniaService.getByCiudad(ciudadId).subscribe({
+                next: (response: ApiResponse<any[]>) => {
+                    console.info('Colonias cargadas para ciudadId', ciudadId, ':', response.data);
+                    this.colonias = response.data;
+                    this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
+                }
+            });
+        });
+
+        this.form.get('ColoniaId')?.valueChanges.subscribe(coloniaId => {
+            console.info('Colonia seleccionada:', coloniaId);
+            this.form.patchValue({
+                ColoniaId: coloniaId
+            }, { emitEvent: false });
+
+            if (!coloniaId) {
+                this.locaciones = [];
+                return;
+            }
+
+            this.actualizarLocaciones();
+        });
+
+        this.form.get('TipoLocacionId')?.valueChanges.subscribe(tipoLocacionId => {
+            console.info('Tipo de locación seleccionado:', tipoLocacionId);
+            this.actualizarLocaciones();
+        });
+    }
+
+    actualizarLocaciones() {
+        const tipoLocacionId = this.form.value.TipoLocacionId;
+        const coloniaId = this.form.value.ColoniaId;
+
+        console.info('Tipo de locación o colonia cambiada. Actualizando locaciones con TipoLocacionId:', tipoLocacionId, 'y ColoniaId:', coloniaId);
+
+        this.locaciones = []; // Limpiar locaciones antes de cargar nuevas
+
+        this.form.patchValue({
+            LocacionId: null
+        }, { emitEvent: false });
+
+        if(!tipoLocacionId || !coloniaId) {
+            return;
+        }
+
+        this.locationService.getByTipoAndColonia(tipoLocacionId, coloniaId).subscribe({
+            next: (response: ApiResponse<any[]>) => {
+                console.info('Locaciones actualizadas:', response.data);
+                this.locaciones = response.data;
+                this.cdr.detectChanges(); // Forzar actualización de la vista después de asignar los datos
+
+                if (this.locacionIdSeleccionada) {
+                    this.form.patchValue({
+                        LocacionId: this.locacionIdSeleccionada
+                    }, { emitEvent: false });
+                }                
+            }
+        });
     }
 
     guardar() {
@@ -169,10 +242,10 @@ export class HorariosFormComponent implements OnInit, OnChanges{
         if (this.form.invalid) return;
 
         const nuevoHorario = {
-            diaSemana: this.form.value.DiaSemana,
+            diasemana: this.form.value.DiaSemana,
             hora: this.form.value.Hora,
             activo: this.form.value.Activo,
-            locacionId: this.form.value.LocacionId,
+            locacionid: this.form.value.LocacionId,
             notas: this.form.value.Notas,
             tipoLocacionId: this.form.value.TipoLocacionId
         };

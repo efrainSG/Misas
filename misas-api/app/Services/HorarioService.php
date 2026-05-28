@@ -82,6 +82,35 @@ class HorarioService {
         return $horarios;
     }
 
+    public function findHorarios(?int $ciudadId, ?int $diaSemana, ?string $hora)
+    {
+        $query = DB::table('Horarios as h')
+            ->join('Locaciones as l', 'h.LocacionId', '=', 'l.Id')
+            ->join('Colonias as c', 'l.ColoniaId', '=', 'c.Id')
+            ->join('Ciudades as ci', 'c.CiudadId', '=', 'ci.Id')
+            ->select('h.Id', 'c.Nombre as ColoniaNombre', 'ci.Nombre as CiudadNombre', 'l.Nombre as LocacionNombre', 'h.DiaSemana', 'h.Hora', 'h.Notas');
+
+        if ($ciudadId) {
+            $query
+            ->where('ci.Id', $ciudadId);
+        }
+
+        if ($diaSemana) {
+            $query
+            ->where('h.DiaSemana', $diaSemana);
+        }
+
+        if ($hora) {
+            $query
+            ->where('h.Hora', '>=', $hora);
+        }
+        $horarios = $query
+            ->where('h.Activo', true)
+            ->get();
+
+        return $horarios;
+    }
+    
     public function create(array $data)
     {
         $id = DB::table('Horarios')->insertGetId([
