@@ -4,25 +4,56 @@
 
       <h4 class="card-title mb-3">Horarios</h4>
 
-        <table class="table table-hover align-middle">
-            <thead class="table-light">
-            <tr>
-                <th>Día de la semana</th>
-                <th>Locación</th>
-                <th>Hora</th>
-                <th>Notas</th>
-            </tr>
-            </thead>
-    
-            <tbody>
-            <tr *ngFor="let horario of horarios">
-                <td class="fw-semibold">{{ horario.DiaSemanaNombre }}</td>
-                <td>{{ horario.LocacionNombre }}</td>
-                <td>{{ horario.Hora }}</td>
-                <td>{{ horario.Notas }}</td>
-            </tr>
-            </tbody>
-        </table>
+      <p class="card-text mb-4">Consulta los horarios de misas disponibles en diferentes locaciones.</p>
+
+      <form [formGroup]="form">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label for="ciudad" class="form-label">Ciudad</label>
+            <select id="ciudad" class="form-select" formControlName="ciudadId">
+              <option [ngValue]="null">Selecciona una ciudad</option>
+              <option *ngFor="let ciudad of ciudades" [ngValue]="ciudad.Id">
+                {{ ciudad.Nombre }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="diaSemana" class="form-label">Día de la Semana</label>
+            <select class="form-select" formControlName="diaSemana">
+              <option [ngValue]="null">Selecciona un día de la semana</option>
+              <option *ngFor="let dia of diasSemana" [ngValue]="dia.Id">{{ dia.Nombre }}</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="hora" class="form-label">A partir de las</label>
+            <input type="time" id="hora" class="form-control" formControlName="hora" placeholder="Hora de celebración">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 mb-4">
+            <button class="btn btn-primary w-100" (click)="buscarHorarios()">Buscar Horarios</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="row">
+        <div class="col-md-4 col-lg-4 mb-4" *ngFor="let horario of horarios">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">{{ horario.LocacionNombre }}</h5>
+              <h6>{{ horario.DiaSemanaNombre }} <span class="badge bg-primary text-white fs-7">{{ horario.Hora }}</span></h6>
+              <div class="card-text">                
+                <strong><i class="bi bi-geo-alt"></i></strong> {{ horario.Direccion }}<br>
+                <p class="text-muted">
+                  {{ horario.ColoniaNombre }}, {{ horario.CiudadNombre }}
+                </p>
+                <strong><i class="bi bi-telephone"></i></strong> {{ horario.Telefono }}<br>
+                <strong><i class="bi bi-info-circle"></i></strong> {{ horario.Notas }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

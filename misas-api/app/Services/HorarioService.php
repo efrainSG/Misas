@@ -18,10 +18,14 @@ class HorarioService {
     {
         $horarios = DB::table('Horarios as h')
             ->join('Locaciones as l', 'h.LocacionId', '=', 'l.Id')
+            ->join('Colonias as c', 'l.ColoniaId', '=', 'c.Id')
+            ->join('Ciudades as ci', 'c.CiudadId', '=', 'ci.Id')
             ->select(
                 'h.Id',
                 'h.LocacionId',
                 'l.Nombre as LocacionNombre',
+                'ci.Nombre as CiudadNombre',
+                'c.Nombre as ColoniaNombre',
                 'h.DiaSemana',
                 'h.Hora',
                 'h.Activo',
@@ -88,24 +92,29 @@ class HorarioService {
             ->join('Locaciones as l', 'h.LocacionId', '=', 'l.Id')
             ->join('Colonias as c', 'l.ColoniaId', '=', 'c.Id')
             ->join('Ciudades as ci', 'c.CiudadId', '=', 'ci.Id')
-            ->select('h.Id', 'c.Nombre as ColoniaNombre', 'ci.Nombre as CiudadNombre', 'l.Nombre as LocacionNombre', 'h.DiaSemana', 'h.Hora', 'h.Notas');
+            ->select('h.Id', 'h.DiaSemana', 'h.Hora', 'h.Notas',
+                     'c.Nombre as ColoniaNombre', 'ci.Nombre as CiudadNombre',
+                     'l.Nombre as LocacionNombre', 'l.Direccion', 'l.Telefono'
+            );
 
-        if ($ciudadId) {
+        if ($ciudadId !== null) {
             $query
             ->where('ci.Id', $ciudadId);
         }
 
-        if ($diaSemana) {
+        if ($diaSemana !== null) {
             $query
             ->where('h.DiaSemana', $diaSemana);
         }
 
-        if ($hora) {
+        if ($hora != null) {
             $query
             ->where('h.Hora', '>=', $hora);
         }
         $horarios = $query
             ->where('h.Activo', true)
+            ->orderBy('h.DiaSemana', 'asc')
+            ->orderBy('h.Hora', 'asc')
             ->get();
 
         return $horarios;

@@ -41,8 +41,8 @@ export class HorarioService {
     search(hora?: string, dia?: number, ciudadId?: number) {
         let queryParams = [];
         if (hora) queryParams.push(`hora=${encodeURIComponent(hora)}`);
-        if (dia !== undefined) queryParams.push(`dia=${dia}`);
-        if (ciudadId !== undefined) queryParams.push(`ciudadId=${ciudadId}`);
+        if (dia !== undefined && dia !== null) queryParams.push(`diasemana=${dia}`);
+        if (ciudadId !== undefined && ciudadId !== null) queryParams.push(`ciudadid=${ciudadId}`);
         return this.http.get<ApiResponse<any[]>>(`${this.apiURL}/buscar?${queryParams.join('&')}`);
     }
 

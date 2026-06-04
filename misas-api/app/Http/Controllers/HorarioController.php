@@ -94,7 +94,8 @@ class HorarioController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Horarios encontrados exitosamente.',
+            'message' => 'Horarios encontrados exitosamente.'.' Filtros: Ciudad=' .
+            $ciudadId . ', Día=' . $diaSemana . ', Hora=' . $hora,
             'data' => $this->horarioService->findHorarios($ciudadId, $diaSemana, $hora)
         ]);
     }

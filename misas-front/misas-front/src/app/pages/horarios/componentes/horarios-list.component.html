@@ -19,7 +19,7 @@
             <tbody>
             <tr *ngFor="let horario of horarios">
                 <td class="fw-semibold">{{ horario.DiaSemanaNombre }}</td>
-                <td>{{ horario.LocacionNombre }}</td>
+                <td>{{ horario.LocacionNombre }}<br><small>{{ horario.CiudadNombre }}, {{ horario.ColoniaNombre }}</small></td>
                 <td>{{ horario.Hora }}</td>
                 <td>{{ (horario.Activo) ? 'Sí' : 'No' }}</td>
                 <td>{{ horario.Notas }}</td>
