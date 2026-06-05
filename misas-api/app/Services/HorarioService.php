@@ -1,21 +1,33 @@
 <?php
 
 namespace App\Services;
+use App\Http\Responses\ServiceResponse;
 
 use Illuminate\Support\Facades\DB;
 
 class HorarioService {
     public function getAll()
     {
+        $inicio = microtime(true);
+
         $horarios = DB::table('Horarios')
             ->select('Id', 'LocacionId', 'DiaSemana', 'Hora', 'Activo', 'Notas')
             ->get();
 
-        return $horarios;
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Horarios obtenidos',
+            data: $horarios,
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function getAllDescriptive()
     {
+        $inicio = microtime(true);
+
         $horarios = DB::table('Horarios as h')
             ->join('Locaciones as l', 'h.LocacionId', '=', 'l.Id')
             ->join('Colonias as c', 'l.ColoniaId', '=', 'c.Id')
@@ -32,62 +44,116 @@ class HorarioService {
                 'h.Notas'
             )
             ->get();
+        
+        $fin = microtime(true);
 
-        return $horarios;
+        return new ServiceResponse(
+            success: true,
+            message: 'Horarios obtenidos',
+            data: $horarios,
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function getById(int $id)
     {
+        $inicio = microtime(true);
+
         $horario = DB::table('Horarios')
             ->select('Id', 'LocacionId', 'DiaSemana', 'Hora', 'Activo', 'Notas')
             ->where('Id', $id)
             ->first();
 
-        return $horario;
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Horario obtenido',
+            data: $horario,
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function getByDiaSemana(string $diaSemana)
     {
+        $inicio = microtime(true);
+
         $horarios = DB::table('Horarios')
             ->select('Id', 'LocacionId', 'DiaSemana', 'Hora', 'Activo', 'Notas')
             ->where('DiaSemana', $diaSemana)
             ->get();
 
-        return $horarios;
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Horarios obtenidos',
+            data: $horarios,
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function getByActivo(bool $activo)
     {
+        $inicio = microtime(true);
+
         $horarios = DB::table('Horarios')
             ->select('Id', 'LocacionId', 'DiaSemana', 'Hora', 'Activo', 'Notas')
             ->where('Activo', $activo)
             ->get();
 
-        return $horarios;
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Horarios obtenidos',
+            data: $horarios,
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function getByHora(string $hora)
     {
+        $inicio = microtime(true);
+
         $horarios = DB::table('Horarios')
             ->select('Id', 'LocacionId', 'DiaSemana', 'Hora', 'Activo', 'Notas')
             ->where('Hora', $hora)
             ->get();
 
-        return $horarios;
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Horarios obtenidos',
+            data: $horarios,
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function getByLocacionId(int $locacionId)
     {
+        $inicio = microtime(true);
+
         $horarios = DB::table('Horarios')
             ->select('Id', 'LocacionId', 'DiaSemana', 'Hora', 'Activo', 'Notas')
             ->where('LocacionId', $locacionId)
             ->get();
 
-        return $horarios;
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Horarios obtenidos',
+            data: $horarios,
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function findHorarios(?int $ciudadId, ?int $diaSemana, ?string $hora)
     {
+        $inicio = microtime(true);
+
         $query = DB::table('Horarios as h')
             ->join('Locaciones as l', 'h.LocacionId', '=', 'l.Id')
             ->join('Colonias as c', 'l.ColoniaId', '=', 'c.Id')
@@ -117,11 +183,20 @@ class HorarioService {
             ->orderBy('h.Hora', 'asc')
             ->get();
 
-        return $horarios;
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Horarios obtenidos',
+            data: $horarios,
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
     
     public function create(array $data)
     {
+        $inicio = microtime(true);
+
         $id = DB::table('Horarios')->insertGetId([
             'LocacionId' => $data['locacionid'],
             'DiaSemana' => $data['diasemana'],
@@ -130,11 +205,20 @@ class HorarioService {
             'Notas' => $data['notas'] ?? null
         ]);
 
-        return $this->getById($id);
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Horario creado',
+            data: $this->getById($id),
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function update(int $id, array $data)
     {
+        $inicio = microtime(true);
+
         $updated = DB::table('Horarios')
             ->where('Id', $id)
             ->update([
@@ -145,40 +229,46 @@ class HorarioService {
                 'Notas' => $data['notas'] ?? null
             ]);
 
+        $fin = microtime(true);
+
         if ($updated) {
-            return [
-                'message' => 'Horario actualizado',
-                'success' => true,
-                'data' => $this->getById($id),
-                'status' => 200
-            ];
+            return new ServiceResponse(
+                success: true,
+                message: 'Horario actualizado',
+                data: $this->getById($id),
+                execution_time_ms: round(($fin - $inicio) * 1000, 2)
+            );
         } else {
-            return [
-                'message' => 'Horario no encontrado',
-                'success' => false,
-                'status' => 404
-            ];
+            return new ServiceResponse(
+                success: false,
+                message: 'Horario no encontrado',
+                execution_time_ms: round(($fin - $inicio) * 1000, 2)
+            );
         }
     }
 
     public function delete(int $id)
     {
+        $inicio = microtime(true);
+        
         $deleted = DB::table('Horarios')
             ->where('Id', $id)
             ->delete();
 
+        $fin = microtime(true);
+
         if ($deleted) {
-            return [
-                'message' => 'Horario eliminado',
-                'success' => true,
-                'status' => 200
-            ];
+            return new ServiceResponse(
+                success: true,
+                message: 'Horario eliminado',
+                execution_time_ms: round(($fin - $inicio) * 1000, 2)
+            );
         } else {
-            return [
-                'message' => 'Horario no encontrado',
-                'success' => false,
-                'status' => 404
-            ];
+            return new ServiceResponse(
+                success: false,
+                message: 'Horario no encontrado',
+                execution_time_ms: round(($fin - $inicio) * 1000, 2)
+            );
         }
     }
 }

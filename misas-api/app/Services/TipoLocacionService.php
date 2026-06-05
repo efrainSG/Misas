@@ -2,50 +2,80 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
+use App\Http\Responses\ServiceResponse;
 
 class TipoLocacionService {
     
     public function getAll()
     {
+        $inicio = microtime(true);
+
         $tiposLocacion = DB::table('TipoLocaciones')
             ->select('Id', 'Nombre', 'Descripcion')
             ->get();
 
-        return $tiposLocacion;
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Tipos de locación obtenidos',
+            data: $tiposLocacion,
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function getById(int $id)
     {
+        $inicio = microtime(true);
+
         $tipoLocacion = DB::table('TipoLocaciones')
             ->select('Id', 'Nombre', 'Descripcion')
             ->where('Id', $id)
             ->first();
 
-        return $tipoLocacion;
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Tipo de locación obtenido',
+            data: $tipoLocacion,
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function getByNombre(string $nombre)
     {
+        $inicio = microtime(true);
+
         $tipoLocacion = DB::table('TipoLocaciones')
             ->select('Id', 'Nombre', 'Descripcion')
             ->where('Nombre', 'like', '%' . $nombre . '%')
             ->get();
 
-        return $tipoLocacion;
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Tipo de locación obtenido',
+            data: $tipoLocacion,
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function create(array $data)
     {
+        $inicio = microtime(true);
+        
         $exists = DB::table('TipoLocaciones')
             ->where('Nombre', $data['nombre'])
             ->exists();
         
         if ($exists) {
-            return [
-                'message' => 'Ya existe un tipo de locación con ese nombre',
-                'success' => false,
-                'status' => 400
-            ];
+            return new ServiceResponse(
+                success: false,
+                message: 'Ya existe un tipo de locación con ese nombre',
+                status: 400
+            );
         }
 
         $tipoLocacionId = DB::table('TipoLocaciones')->insertGetId([
@@ -53,21 +83,29 @@ class TipoLocacionService {
             'Descripcion' => $data['descripcion'] ?? null
         ]);
 
-        return $this->getById($tipoLocacionId);
+        $fin = microtime(true);
+        return new ServiceResponse(
+            success: true,
+            message: 'Tipo de locación creado',
+            data: $this->getById($tipoLocacionId),
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function update(int $id, array $data)
     {
+        $inicio = microtime(true);
+        
         $exists = DB::table('TipoLocaciones')
         ->where('Id', $id)
         ->exists();
 
         if (!$exists) {
-            return [
-                'message' => 'No se encontró el tipo de locación para actualizar',
-                'success' => false,
-                'status' => 404
-            ];
+            return new ServiceResponse(
+                success: false,
+                message: 'No se encontró el tipo de locación para actualizar',
+                status: 404
+            );
         }
         
         DB::table('TipoLocaciones')
@@ -77,43 +115,48 @@ class TipoLocacionService {
             'Descripcion' => $data['descripcion'] ?? null
         ]);
         
-        return [
-            'message' => 'Tipo de locación actualizado',
-            'success' => true,
-            'data' => $this->getById($id),
-            'status' => 200
-        ];
+        $fin = microtime(true);
+        return new ServiceResponse(
+            success: true,
+            message: 'Tipo de locación actualizado',
+            data: $this->getById($id),
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function delete(int $id)
     {
+        $inicio = microtime(true);
         $allowDelete = DB::table('Locaciones')
             ->where('TipoLocacionId', $id)
             ->count() === 0;
         if (!$allowDelete) {
-            return [
-                'message' => 'No se puede eliminar el tipo de locación porque hay locaciones asociadas',
-                'success' => false,
-                'status' => 400
-            ];
+            return new ServiceResponse(
+                success: false,
+                message: 'No se puede eliminar el tipo de locación porque hay locaciones asociadas',
+                status: 400
+            );
         }
 
         $deleted = DB::table('TipoLocaciones')
             ->where('Id', $id)
             ->delete();
 
+        $fin = microtime(true);
         if ($deleted) {
-            return [
-                'message' => 'Tipo de locación eliminado',
-                'success' => true,
-                'status' => 200
-            ];
+            return new ServiceResponse(
+                success: true,
+                message: 'Tipo de locación eliminado',
+                status: 200,
+                execution_time_ms: round(($fin - $inicio) * 1000, 2)
+            );
         } else {
-            return [
-                'message' => 'Tipo de locación no encontrado',
-                'success' => false,
-                'status' => 404
-            ];
+            return new ServiceResponse(
+                success: false,
+                message: 'Tipo de locación no encontrado',
+                status: 404,
+                execution_time_ms: round(($fin - $inicio) * 1000, 2)
+            );
         }
     }
 }

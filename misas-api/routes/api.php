@@ -55,3 +55,12 @@ Route::get('/horarios/{id}', [HorarioController::class, 'getById']);
 Route::post('/horarios', [HorarioController::class, 'create']);
 Route::put('/horarios/{id}', [HorarioController::class, 'update']);
 Route::delete('/horarios/{id}', [HorarioController::class, 'delete']);
+
+Route::get('/test', function() {
+    return response()->json([
+        'success' => true,
+        'message' => '¡La API está funcionando correctamente!',
+        'execution_time_ms' => round((microtime(true) - LARAVEL_START) * 1000, 2),
+        'timestamp' => now()
+    ]);
+});

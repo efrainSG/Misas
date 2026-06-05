@@ -3,71 +3,128 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
+use App\Http\Responses\ServiceResponse;
 
 class ColoniaService
 {
 
     public function getAll()
     {
+        $inicio = microtime(true);
+
         $colonias = DB::table('Colonias')
             ->select('Id', 'Nombre', 'CiudadId')
             ->get();
 
-        return $colonias;
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Colonias obtenidas',
+            data: $colonias,
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function getAllDescriptive()
     {
+        $inicio = microtime(true);
+
         $colonias = DB::table('Colonias as C')
             ->join('Ciudades as Ci', 'Ci.Id', '=', 'C.CiudadId')
             ->select('C.Id', 'C.Nombre', 'C.CiudadId', 'Ci.Nombre as CiudadNombre')
             ->get();
 
-        return $colonias;
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Colonias obtenidas',
+            data: $colonias,
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
     
     public function getById(int $id)
     {
+        $inicio = microtime(true);
+
         $colonia = DB::table('Colonias')
             ->select('Id', 'Nombre', 'CiudadId')
             ->where('Id', $id)
             ->first();
 
-        return $colonia;
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Colonia obtenida',
+            data: $colonia,
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function getByNombre(string $nombre)
     {
+        $inicio = microtime(true);
+
         $colonia = DB::table('Colonias')
             ->select('Id', 'Nombre', 'CiudadId')
             ->where('Nombre', 'like', '%' . $nombre . '%')
             ->first();
 
-        return $colonia;
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Colonia obtenida',
+            data: $colonia,
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function getByCiudadId(int $ciudadId)
     {
+        $inicio = microtime(true);
+
         $colonias = DB::table('Colonias')
             ->select('Id', 'Nombre', 'CiudadId')
             ->where('CiudadId', $ciudadId)
             ->get();
 
-        return $colonias;
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Colonias obtenidas',
+            data: $colonias,
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function create(array $data)
     {
-            $coloniaId = DB::table('Colonias')->insertGetId([
+        $inicio = microtime(true);
+
+        $coloniaId = DB::table('Colonias')->insertGetId([
             'Nombre' => $data['nombre'],
             'CiudadId' => $data['ciudadid'],
         ]);
 
-        return $this->getById($coloniaId);
+        $fin = microtime(true);
+
+        return new ServiceResponse(
+            success: true,
+            message: 'Colonia creada',
+            data: $this->getById($coloniaId),
+            execution_time_ms: round(($fin - $inicio) * 1000, 2)
+        );
     }
 
     public function update(int $id, array $data)
     {
+        $inicio = microtime(true);
+
         $updateData = [];
         if (isset($data['nombre'])) {
             $updateData['Nombre'] = $data['nombre'];
@@ -77,51 +134,64 @@ class ColoniaService
         }
 
         if (empty($updateData)) {
-            return [
-                'message' => 'No se proporcionaron datos para actualizar',
-                'success' => false,
-                'status' => 400
-            ];
+            $fin = microtime(true);
+
+            return  new ServiceResponse(
+                success: false,
+                message: 'No se proporcionaron datos para actualizar',
+                status: 400,
+                execution_time_ms: round(($fin - $inicio) * 1000, 2)
+            );
         }
 
         $updated = DB::table('Colonias')
             ->where('Id', $id)
             ->update($updateData);
 
+        $fin = microtime(true);
+
         if ($updated) {
-            return [
-                'message' => 'Colonia actualizada',
-                'success' => true,
-                'data' => $this->getById($id),
-                'status' => 200
-            ];
+            return new ServiceResponse(
+                success: true,
+                message: 'Colonia actualizada',
+                data: $this->getById($id),
+                status: 200,
+                execution_time_ms: round(($fin - $inicio) * 1000, 2)
+            );
         } else {
-            return [
-                'message' => 'Colonia no encontrada o sin cambios',
-                'success' => false,
-                'status' => 404
-            ]   ;
+            return new ServiceResponse(
+                success: false,
+                message: 'Colonia no encontrada o sin cambios',
+                status: 404,
+                execution_time_ms: round(($fin - $inicio) * 1000, 2)
+            );
         }
     }
 
     public function delete(int $id)
     {
+        $inicio = microtime(true);
+        
         $deleted = DB::table('Colonias')
             ->where('Id', $id)
             ->delete();
 
+        $fin = microtime(true);
+
         if ($deleted) {
-            return [
-                'message' => 'Colonia eliminada',
-                'success' => true,
-                'status' => 200
-            ];
+            return new ServiceResponse(
+                success: true,
+                message: 'Colonia eliminada',
+                status: 200,
+                execution_time_ms: round(($fin - $inicio) * 1000, 2)
+            );
         } else {
-            return [
-                'message' => 'Colonia no encontrada',
-                'success' => false,
-                'status' => 404
-            ];
+            return new ServiceResponse(
+                success: false,
+                message: 'Colonia no encontrada',
+                status: 404,
+                execution_time_ms: round(($fin - $inicio) * 1000, 2)
+            );
         }
     }
 }

@@ -18,69 +18,72 @@ class CiudadController extends Controller
 
     public function getAll()
     {
+        $result = $this->ciudadService->getAll();
+
         return response()->json([
-            'success' => true,
-            'message' => 'Ciudades obtenidas exitosamente',
-            'data' => $this->ciudadService->getAll()
-        ]);
+            'success' => $result->success,
+            'message' => $result->message,
+            'data' => $result->data,
+            'execution_time_ms' => $result->execution_time_ms
+        ], $result->status);
     }
 
     public function getById(int $id)
     {
-        $data = $this->ciudadService->getById($id);
+        $result = $this->ciudadService->getById($id);
 
-        if (!$data) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se encontraron ciudades con ese ID'], 404);
-        }
         return response()->json([
-            'success' => true,
-            'message' => 'Ciudad obtenida exitosamente',
-            'data' => $data
-        ]);
+            'success' => $result->success,
+            'message' => $result->message,
+            'data' => $result->data,
+            'execution_time_ms' => $result->execution_time_ms
+        ], $result->status);
     }
 
     public function getByNombre(string $nombre)
     {
-        $data = $this->ciudadService->getByNombre($nombre);
+        $result = $this->ciudadService->getByNombre($nombre);
         return response()->json([
-            'success' => true,
-            'message' => 'Ciudades obtenidas exitosamente',
-            'data' => $data
-        ]);
+            'success' => $result->success,
+            'message' => $result->message,
+            'data' => $result->data,
+            'execution_time_ms' => $result->execution_time_ms
+        ], $result->status);
     }
 
     public function create(CreateCiudadRequest $request)
     {
         // Crear la nueva ciudad
-        $newCiudad = $this->ciudadService->create($request->validated());
+        $result = $this->ciudadService->create($request->validated());
 
         return response()->json([
-            'success' => true,
-            'message' => 'Ciudad creada exitosamente',
-            'data' => $newCiudad
-        ], 201);
+            'success' => $result->success,
+            'message' => $result->message,
+            'data' => $result->data,
+            'execution_time_ms' => $result->execution_time_ms
+        ], $result->status);
     }
 
     public function update(int $id, UpdateCiudadRequest $request)
     {
-        $updatedCiudad = $this->ciudadService->update($id, $request->validated());
+        $result = $this->ciudadService->update($id, $request->validated());
 
         return response()->json([
-            'success' => $updatedCiudad['success'],
-            'message' => $updatedCiudad['message'],
-            'data' => $updatedCiudad['data'] ?? null
-        ], $updatedCiudad['status'] ?? 200);
+            'success' => $result->success,
+            'message' => $result->message,
+            'data' => $result->data,
+            'execution_time_ms' => $result->execution_time_ms
+        ], $result->status);
     }
 
     public function delete(int $id)
     {
-        $deleted = $this->ciudadService->delete($id);
+        $result = $this->ciudadService->delete($id);
 
         return response()->json([
-            'success' => $deleted['success'],
-            'message' => $deleted['message']
-        ], $deleted['status'] ?? 200);
+            'success' => $result->success,
+            'message' => $result->message,
+            'execution_time_ms' => $result->execution_time_ms
+        ], $result->status);
     }
 }

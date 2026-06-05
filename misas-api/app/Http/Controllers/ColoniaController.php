@@ -18,88 +18,98 @@ class ColoniaController extends Controller
 
     public function getAll()
     {
+        $result = $this->coloniaService->getAll();
+        
         return response()->json([
-            'success' => true,
-            'message' => 'Colonias obtenidas exitosamente',
-            'data' => $this->coloniaService->getAll()
-        ]);
+            'success' => $result->success,
+            'message' => $result->message,
+            'data' => $result->data,
+            'execution_time_ms' => $result->execution_time_ms
+        ], $result->status);
     }
 
     public function getAllDescriptive()
     {
+        $result = $this->coloniaService->getAllDescriptive();
         return response()->json([
-            'success' => true,
-            'message' => 'Colonias obtenidas exitosamente',
-            'data' => $this->coloniaService->getAllDescriptive()
-        ]);
+            'success' => $result->success,
+            'message' => $result->message,
+            'data' => $result->data,
+            'execution_time_ms' => $result->execution_time_ms
+        ], $result->status);
     }
 
     public function getById(int $id)
     {
-        $data = $this->coloniaService->getById($id);
-        if (!$data) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se encontraron colonias con ese ID'
-            ], 404);
-        }
+        $result = $this->coloniaService->getById($id);
+
         return response()->json([
-            'success' => true,
-            'message' => 'Colonia obtenida exitosamente',
-            'data' => $data
-        ]);
+            'success' => $result->success,
+            'message' => $result->message,
+            'data' => $result->data,
+            'execution_time_ms' => $result->execution_time_ms
+        ], $result->status);
     }
 
     public function getByNombre(string $nombre)
     {
+        $result = $this->coloniaService->getByNombre($nombre);
+
         return response()->json([
-            'success' => true,
-            'message' => 'Colonias obtenidas exitosamente',
-            'data' => $this->coloniaService->getByNombre($nombre)
-        ]);
+            'success' => $result->success,
+            'message' => $result->message,
+            'data' => $result->data,
+            'execution_time_ms' => $result->execution_time_ms
+        ], $result->status);
     }
 
     public function getByCiudadId(int $ciudadId)
     {
+        $result = $this->coloniaService->getByCiudadId($ciudadId);
+
         return response()->json([
-            'success' => true,
-            'message' => 'Colonias obtenidas exitosamente',
-            'data' => $this->coloniaService->getByCiudadId($ciudadId)
-        ]);
+            'success' => $result->success,
+            'message' => $result->message,
+            'data' => $result->data,
+            'execution_time_ms' => $result->execution_time_ms
+        ], $result->status);
     }
 
     public function create(CreateColoniaRequest $request)
     {
         // Crear la nueva colonia
-        $newColonia = $this->coloniaService->create($request->validated());
+        $result = $this->coloniaService->create($request->validated());
 
         return response()->json([
-            'success' => true,
-            'message' => 'Colonia creada exitosamente',
-            'data' => $newColonia
-        ], 201);
+            'success' => $result->success,
+            'message' => $result->message,
+            'data' => $result->data,
+            'execution_time_ms' => $result->execution_time_ms
+        ], $result->status);
     }
 
     public function update(int $id, UpdateColoniaRequest $request)
     {
         // Actualizar la colonia existente
-        $updatedColonia = $this->coloniaService->update($id, $request->validated());
+        $result = $this->coloniaService->update($id, $request->validated());
 
         return response()->json([
-            'success' => $updatedColonia['success'],
-            'message' => $updatedColonia['message'],
-            'data' => $updatedColonia['data'] ?? null
-        ], $updatedColonia['status'] ?? 200);
+            'success' => $result->success,
+            'message' => $result->message,
+            'data' => $result->data,
+            'execution_time_ms' => $result->execution_time_ms
+        ], $result->status);
     }
 
     public function delete(int $id)
     {
-        $deleted = $this->coloniaService->delete($id);
+        $result = $this->coloniaService->delete($id);
 
         return response()->json([
-            'success' => $deleted['success'],
-            'message' => $deleted['message']
-        ], $deleted['status'] ?? 200);
+            'success' => $result->success,
+            'message' => $result->message,
+            'execution_time_ms' => $result->execution_time_ms
+        ], $result->status);
     }
 }
 ?>

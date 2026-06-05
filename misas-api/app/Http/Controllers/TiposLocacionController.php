@@ -18,37 +18,37 @@ class TiposLocacionController extends Controller
 
     public function getAll()
     {
+        $result = $this->tipoLocacionService->getAll();
+
         return response()->json([
-            'success' => true,
-            'message' => 'Tipos de locación obtenidos exitosamente',
-            'data' => $this->tipoLocacionService->getAll()
-        ]);
+            'success' => $result->success,
+            'message' => $result->message,
+            'data' => $result->data,
+            'execution_time_ms' => $result->execution_time_ms ?? null,
+        ], $result->status ?? 200);
     }
 
     public function getById(int $id)
     {
-        $data = $this->tipoLocacionService->getById($id);
-        if (!$data) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se encontraron tipos de locación con ese ID'
-            ], 404);
-        }
+        $result = $this->tipoLocacionService->getById($id);
+
         return response()->json([
-            'success' => true,
-            'message' => 'Tipo de locación obtenido exitosamente',
-            'data' => $data
-        ]);
+            'success' => $result->success,
+            'message' => $result->message,
+            'data' => $result->data,
+            'execution_time_ms' => $result->execution_time_ms ?? null,
+        ], $result->status ?? 200);
     }
 
     public function getByNombre(string $nombre)
     {
-        $data = $this->tipoLocacionService->getByNombre($nombre);
+        $result = $this->tipoLocacionService->getByNombre($nombre);
         return response()->json([
-            'success' => true,
-            'message' => 'Tipo de locación obtenido exitosamente',
-            'data' => $data
-        ]);
+            'success' => $result->success,
+            'message' => $result->message,
+            'data' => $result->data,
+            'execution_time_ms' => $result->execution_time_ms ?? null,
+        ], $result->status ?? 200);
     }
 
     public function create(CreateTipoLocacionRequest $request)
@@ -56,10 +56,11 @@ class TiposLocacionController extends Controller
         $newTipoLocacion = $this->tipoLocacionService->create($request->validated());
 
         return response()->json([
-            'success' => true,
-            'message' => 'Tipo de locación creado exitosamente',
-            'data' => $newTipoLocacion
-        ], 201);
+            'success' => $newTipoLocacion->success,
+            'message' => $newTipoLocacion->message,
+            'data' => $newTipoLocacion->data,
+            'execution_time_ms' => $newTipoLocacion->execution_time_ms ?? null,
+        ], $newTipoLocacion->status ?? 201);
     }
 
     public function update(int $id, UpdateTipoLocacionRequest $request)
@@ -68,10 +69,11 @@ class TiposLocacionController extends Controller
         $updatedTipoLocacion = $this->tipoLocacionService->update($id, $request->validated());
 
         return response()->json([
-            'success' => $updatedTipoLocacion['success'],
-            'message' => $updatedTipoLocacion['message'],
-            'data' => $updatedTipoLocacion['data'] ?? null
-        ], $updatedTipoLocacion['status'] ?? 200);
+            'success' => $updatedTipoLocacion->success,
+            'message' => $updatedTipoLocacion->message,
+            'data' => $updatedTipoLocacion->data,
+            'execution_time_ms' => $updatedTipoLocacion->execution_time_ms ?? null,
+        ], $updatedTipoLocacion->status ?? 201);
     }
 
     public function delete(int $id)
@@ -79,9 +81,9 @@ class TiposLocacionController extends Controller
         $deleted = $this->tipoLocacionService->delete($id);
 
         return response()->json([
-            'success' => $deleted['success'],
-            'message' => $deleted['message']
-        ], $deleted['status'] ?? 404);
+            'success' => $deleted->success,
+            'message' => $deleted->message,
+            'execution_time_ms' => $deleted->execution_time_ms ?? null,
+        ], $deleted->status ?? 200);
     }
 }
-?>
